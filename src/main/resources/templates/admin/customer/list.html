@@ -1,0 +1,215 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{index.html}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Danh sách khách hàng </title>
+</head>
+<body>
+
+<div class="main-content" layout:fragment="content">
+
+    <div class="main-content-inner">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try {
+                    ace.settings.check('breadcrumbs', 'fixed')
+                } catch (e) {
+                }
+            </script>
+
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a href="">
+
+                    Trang chủ
+                    </a>
+                </li>
+                <li class="active">
+                    Danh sách người dùng
+                </li>
+            </ul>
+            <!-- /.breadcrumb -->
+        </div>
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+
+
+                    <!-- PAGE CONTENT BEGINS -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="widget-box table-filter">
+                                <div class="widget-header">
+                                    <h4 class="widget-title" style="font-family: VnBlack">
+                                        Tìm kiếm
+                                    </h4>
+                                    <div class="widget-toolbar">
+                                        <a href="#" data-action="collapse">
+                                            <i class="ace-icon fa fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <form   th:action="@{/customer-list}" id="listFormCustomer" th:object="${customerSearch}" method="GET" >
+                                    <div class="widget-body">
+                                        <div class="widget-main">
+                                            <div class="form-horizontal">
+                                                <div class="row" >
+                                                    <div class="col-sm-4">
+                                                        <label th:for="fullName">Tên khách hàng</label>
+                                                        <input type="text"  class="form-control" th:field ="*{fullName}" />
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <label th:for="phone" >Di động  </label>
+                                                        <input type="text"  class="form-control" th:field ="*{phone}" />
+
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <label th:for="email" >Email </label>
+                                                        <input type="text"  class="form-control" th:field ="*{email}" />
+                                                    </div>
+                                                </div>
+                                                <div class="row" >
+                                                    <div class="col-sm-6" sec:authorize="hasAnyRole('MANAGER')">
+                                                        <label th:for="staffId"  style="width: 500px;"> Nhân viên phụ trách</label>
+                                                        <select th:field="*{staffId}" style=" margin-top: -2px;width: 405px;">
+                                                            <option value="" > &#45;&#45; Chọn nhân viên phụ trách &#45;&#45; </option>
+                                                            <option th:each="entry : ${staffs.entrySet()}"
+                                                                    th:value="${entry.key}"
+                                                                    th:utext="${entry.value}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="col-sm-2 control-label"></label>
+                                                        <button id="btnSearchCustomer" type="button"
+                                                                class="btn btn-sm btn-success" style="float: right; margin-top: 24px;">
+                                                            Tìm kiếm
+                                                            <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </form>
+
+
+                            <div class="table-btn-controls">
+                                <div class="pull-right tableTools-container" style="margin-top: 8px;" >
+                                    <div class="dt-buttons btn-overlap btn-group">
+                                        <a flag="info"
+                                           class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
+                                           data-toggle="tooltip" title="Thêm người dùng" th:href='@{/customer-edit}'>
+                                        <span>
+																<i class="fa fa-plus-circle bigger-110 purple"></i>
+															</span>
+                                        </a>
+                                        <button id="btnDelete" type="button" disabled style="margin-left: 6px;"
+                                                class="dt-button buttons-html5 btn btn-white btn-primary btn-bold"
+                                                data-toggle="tooltip"
+                                                title="Xóa bài viết" onclick="warningBeforeDeleteCustomer()">
+															<span>
+																<i class="fa fa-trash-o bigger-110 pink"></i>
+															</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table id="buildingList" class="table  table-bordered ">
+                                            <thead>
+                                            <tr style="font-family: VnBlack ; font-weight: bold; color: #000000;">
+                                                <th><input  type="checkbox" id="checkAll"value="#"/></th>
+                                                <th>Tên  </th>
+                                                <th>Nhân viên quản lý</th>
+                                                <th>Di động</th>
+                                                <th>Email</th>
+                                                <th>Nhu cầu</th>
+                                                <th>Người nhập</th>
+                                                <th>Ngày nhập </th>
+                                                <th>Tình trạng </th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="item : ${customerSearch.listResult}">
+                                                    <td> <input type="checkbox" th:id= "'checkbox_' + ${item.id} " th:value="*{item.id}" /></td>
+                                                    <td th:text="${item.fullName}"></td>
+                                                    <td th:text="${item.staffName}"></td>
+                                                    <td th:text="${item.phone}"></td>
+                                                    <td th:text="${item.email}"></td>
+                                                    <td th:text="${item.demand}"></td>
+                                                    <td th:text="${item.createdBy}"></td>
+                                                    <td th:text="${item.createdDate}"></td>
+                                                    <td th:text="${item.status}"></td>
+                                                    <td>
+                                                        <button class="btn btn-xs btn-primary"  data-toggle="tooltip" data-placement="bottom"
+                                                                title="Giao tòa nhà cho nhân viên" th:onclick="'assignmentCustomer('+ ${item.id}+')'">
+                                                            <i class ="ace-icon fa fa-pencil bigger-120"></i>
+                                                        </button>
+                                                        <a class="btn btn-xs btn-primary " data-toggle="tooltip"
+                                                           title="Cập nhật bài viết"   th:href="@{'/customer-edit-'+ ${item.id}}" /><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table> <!-- table-->
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div id = "assignmentCustomerModal" class ="modal fade" role="dialog" layout:fragment="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"> <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLongTitle" > Danh sách nhân viên </h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="staffList">
+                    <thead>
+                    <tr style="font-family: VnBlack ; font-weight: bold; color: black;">
+                        <th> Chọn nhân viên </th>
+                        <th> Tên nhân viên </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+            <div  class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnAssignCustomer"  style="border: 0px"> Giao Khách Hàng </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modal" style="border: 0px">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+</body>
+</html>

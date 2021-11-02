@@ -1,0 +1,240 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index.html}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Chỉnh sửa tòa nhà </title>
+</head>
+<body>
+<div class="main-content" layout:fragment="content">
+    <div class="main-content-inner">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try {
+                    ace.settings.check('breadcrumbs', 'fixed')
+                } catch (e) {
+                }
+            </script>
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a href="">
+                    Trang chủ
+                    </a>
+                </li>
+                <li class="active">Chỉnh sửa người dùng</li>
+            </ul><!-- /.breadcrumb -->
+        </div>
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form  class="form-horizontal" role="form" id="formSubmit"  th:object="${buildingEdit}" >
+                        <div class="form-group">
+                            <label th:for="name" class="col-sm-3 control-label no-padding-right">Tên tòa nhà :</label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{name}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" th:for="district"> Quận :</label>
+                            <div class="col-sm-3" style="margin-bottom: 10px;">
+                                <select th:field="*{district}">
+                                    <option value=""> -- Chọn quận -- </option>
+                                    <option th:each="entry : ${districts.entrySet()}"
+                                            th:value="${entry.key}"
+                                            th:utext="${entry.value}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="ward" >Phường :</label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{ward}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="street" >Đường :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{street}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="structure" >Kết cấu :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{structure}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="numberOfBasement">Số tầng hầm :</label>
+                            <div class="col-sm-7">
+                                <input type="number"  id="numberOfBasement" class="form-control" name="numberOfBasement"  min ="0" th:field ="*{numberOfBasement}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" th:for="buildingArea" >Diện tích sàn : </label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{buildingArea}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="direction" >Hướng :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{direction}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="level" >Hạng :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{level}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="rentArea">Diện tích thuê  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{rentArea}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="descriptionArea">Mô tả diện tích  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{descriptionArea}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="rentPrice">Giá thuê  :</label>
+                            <div class="col-sm-7">
+                                <input type="number"  id="rentPrice" class="form-control" name="rentPrice" th:field ="*{rentPrice}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="rentPriceDescription">Mô tả giá  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{rentPriceDescription}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="carCost">Phí ô tô  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{carCost}"/>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="motorbikeCost">Phí mô tô  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{motorbikeCost}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="overtimeCost">Phí ngoài giờ  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{overtimeCost}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="electricityCost">Tiền điện :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{electricityCost}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="deposit">Đặt cọc  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{deposit}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="payment">Thanh toán  :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{payment}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="timeRent">Thời hạn thuê :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{timeRent}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="timeDecorator">Thời gian trang trí :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{timeDecorator}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="managerName" >Tên quản lý :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{managerName}"/>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="managerPhone" >SĐT quản lý :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{managerPhone}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="brokerageFee" >Phí mô giới :</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" th:field ="*{brokerageFee}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" > Loại tòa nhà :</label>
+                            <div class="col-sm-7">
+                                <li th:each="type : ${buildingTypes}">
+                                    <input type="checkbox"
+                                           th:field="*{buildingTypes}"
+                                           th:value="${type.getValue()}" />
+                                    <label th:text="${type.getValue()}"></label>
+                                </li>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="note" >Ghi chú :</label>
+                            <div class="col-sm-7">
+                                <textarea id="note" name="note" rows="4" cols="99" ></textarea>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right"  for="thumbnail" >Ảnh đại diện</label>
+                            <div class="col-sm-4">
+                                <input type="file"  id="thumbnail" name="thumbnail">
+                            </div>
+
+                        </div>
+                        <input type="hidden"  id="buildlingid" th:field ="*{id}" th:value="${id}"/>
+                        <div class="clearfix form-actions">
+                            <div class="col-md-offset-3 col-md-9" >
+                                  <div th:if="${buildingEdit.id != null}" >
+                                      <button class="btn btn-info" type="button"  id="btnUpdateBuilding" >
+                                          <i class="ace-icon fa fa-check bigger-110"></i>
+                                          Cập nhật tòa nhà
+                                      </button>
+                                  </div>
+
+                                <div th:if="${buildingEdit.id == null}" >
+                                    <button class="btn btn-info" type="button"  id="btnAddBuilding" >
+                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                        Thêm tòa nhà
+                                    </button>
+                                </div>
+                                <button class="btn" type="reset" style="    margin-left: 200px;   margin-top: -64px;">
+                                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                                    Hủy
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

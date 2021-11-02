@@ -1,0 +1,280 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{index.html}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Danh sách tòa nhà</title>
+</head>
+<body>
+<div class="main-content" layout:fragment="content">
+    <div class="main-content-inner">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+            </script>
+
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a href="">
+                    Trang chủ
+                    </a>
+                </li>
+                <li class="active">
+                    Danh sách tòa nhà
+                </li>
+            </ul>
+        </div>
+
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="widget-box ">
+                        <div class="widget-header">
+
+                            <h4 class="widget-title" style="font-family: VnBlack">Tìm kiếm </h4>
+                            <div class="widget-toolbar">
+                                <a href="#" data-action="collapse">
+                                    <i class="ace-icon fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div> <!-- widget-header -->
+                        <!-- search Buidling -->
+                        <form  th:action="@{/building-list}" id="listFormBuilding" th:object="${modelSearch}" method="GET">
+                            <div class="widget-body " >
+                                <div class="widget-main">
+                                    <div class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label th:for="name" >Tên tòa nhà </label>
+                                                <input type="text"  class="form-control" th:field ="*{name}" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label th:for="buildingArea" >Diện tích sàn </label>
+                                                <input type="number"  id="buildingArea" class="form-control" name="buildingArea" th:field ="*{buildingArea}" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <label style="padding-bottom: -20px ;margin-right: 21px;"> Quận hiện có</label>
+                                                <select th:field="*{district}">
+                                                    <option value=""> -- Chọn quận -- </option>
+                                                    <option th:each="entry : ${districts.entrySet()}"
+                                                            th:value="${entry.key}"
+                                                            th:utext="${entry.value}">
+                                                    </option>
+                                                </select>
+
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label th:for="ward" >Phường </label>
+                                                <input type="text"  class="form-control" th:field ="*{ward}" />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label th:for="street" >Đường </label>
+                                                <input type="text" class="form-control" th:field ="*{street}"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label th:for="numberOfBaseMent">Số tầng hầm</label>
+                                                <input type="number"  id="numberOfBasement" class="form-control" name="numberOfBasement" th:field ="*{numberOfBasement}" />
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label th:for="direction" >Hướng </label>
+                                                <input type="text" class="form-control" th:field ="*{direction}"/>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label th:for="level" >Hạng </label>
+                                                <input class="form-control" th:field ="*{level}"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label th:for="areaRentFrom">Diện tích từ </label>
+                                                <input type="number"  id="areaRentFrom" class="form-control" name="areaRentFrom"  th:field ="*{areaRentFrom}"/>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label th:for="areaRentTo" >Diện tích đến </label>
+                                                <input type="number"  id="areaRentTo" class="form-control" name="areaRentTo" th:field ="*{areaRentTo}"/>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label th:for="costRentFrom" >Giá thuê từ</label>
+                                                <input type="number"  id="costRentFrom" class="form-control" name="costRentFrom" th:field ="*{costRentFrom}" />
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label th:for="costRentTo" >Giá thuê đến </label>
+                                                <input type="number"  id="costRentTo" class="form-control" name="costRentTo"  th:field ="*{costRentTo}" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <label th:for="managerName" >Tên quản lý </label>
+                                                <input type="text" class="form-control" th:field ="*{managerName}" />
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label th:for="managerPhone" >Điện thoại quản lý </label>
+                                                <input type="text" class="form-control" th:field ="*{managerPhone}" />
+                                            </div>
+                                            <div class="col-sm-4" sec:authorize="hasAnyRole('MANAGER')">
+
+                                                <label th:for="staffId" > Nhân viên phụ trách</label>
+                                               <select th:field="*{staffId}" style=" margin-top: -2px;width: 405px;">
+                                                    <option value="" > &#45;&#45; Chọn nhân viên phụ trách &#45;&#45; </option>
+                                                    <option th:each="entry : ${staffs.entrySet()}"
+                                                            th:value="${entry.key}"
+                                                            th:utext="${entry.value}">
+                                                    </option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <label > Loại tòa nhà</label>
+                                                <li th:each="type : ${buildingTypes}" style="    text-decoration: none; display: inline-block;">
+                                                    <input type="checkbox" style="margin-left:8px "
+                                                           th:field="*{buildingTypes}"
+                                                           th:value="${type.getKey()}" />
+                                                    <label th:text="${type.getValue()}"></label>
+                                                </li>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm=12">
+                                                <button type="button" style=" border: thick;  padding: 5px 15px; margin-left: 14px;" class="bnt btn-success" id="btnSearch"> Tìm kiếm <i class="fa fa-arrow-right"></i></button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div> <!-- widget-main -->
+                            </div> <!-- widget-body  and search Building-->
+                            <input type="hidden"  th:value="${modelSearch.page}" id="page" name="page"/>
+                            <input type="hidden" value="" id="limit" name="limit"/>
+                            <input type="hidden" th:value="${modelSearch.totalPage}" id="totalPage" name="totalPage"/>
+                        </form>
+                    </div> <!-- widget-box -->
+                    <div class="table-btn-controls" >
+                        <div class="pull-right tableTools-container" style=" margin-top: 8px;">
+                            <div class="dt-buttons btn-overlap btn-group">
+                                <a flag="info"
+                                   class="dt-button buttons-colvis btn btn-white btn-primary btn-bold" data-toggle="tooltip"
+                                   title='Thêm bài viết' th:href="@{/building-edit}">
+                                <span>
+																<i class="fa fa-plus-circle bigger-110 purple"></i>
+															</span>
+                                </a>
+                                <button id="btnDelete" type="button" style="margin-left: 6px;"  disabled
+                                        class="dt-button buttons-html5 btn btn-white btn-primary btn-bold"  onclick="warningBeforeDelete()" data-toggle="tooltip" title='Xóa bài viết'>
+										<span>
+											<i class="fa fa-trash-o bigger-110 pink"></i>
+										</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>  <!-- delete and create-->
+                    <br/>
+                    <!-- buidling list-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table id="buildingList" class="table  table-bordered ">
+                                            <thead>
+                                            <tr style="font-family: VnBlack ; font-weight: bold; color: #000000;">
+                                                <th><input  type="checkbox" id="checkAll"value="#"/></th>
+                                                <th>Ngày </th>
+                                                <th>Tên tòa nhà</th>
+                                                <th>Địa chỉ</th>
+                                                <th>Tên quản lý</th>
+                                                <th>Số điện thoại</th>
+                                                <th>D.T sàn</th>
+                                                <th>D.T trống </th>
+                                                <th>Giá thuê </th>
+                                                <th>Phí dịch vụ</th>
+                                                <th>Phí MG</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="item : ${modelSearch.listResult}" >
+                                                    <td> <input type="checkbox" th:id= "'checkbox_' + ${item.id} " th:value="*{item.id}" /></td>
+                                                    <td th:text="${item.createdDate}"> </td>
+                                                    <td th:text="${item.name}"> </td>
+                                                    <td th:text="${item.address}"></td>
+                                                    <td th:text="${item.managerName}"></td>
+                                                    <td th:text="${item.managerPhone}"></td>
+                                                    <td th:text="${item.buildingArea}"></td>
+                                                    <td th:text="${item.emptyArea}"></td>
+                                                    <td th:text="${item.rentPrice}"></td>
+                                                    <td th:text="${item.serviceCost}"></td>
+                                                    <td th:text="${item.brokerageFee}"></td>
+
+                                                    <td>
+
+                                                        <button class="btn btn-xs btn-primary"  data-toggle="tooltip" data-placement="bottom"
+                                                                title="Giao tòa nhà cho nhân viên" th:onclick="'assignmentBuilding('+ ${item.id}+')'" >
+                                                            <i class ="ace-icon fa fa-pencil bigger-120"></i>
+                                                        </button>
+                                                        <a class="btn btn-xs btn-primary " data-toggle="tooltip"
+                                                           title="Cập nhật bài viết"   th:href="@{'/building-edit-'+ ${item.id}}"/><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr> <!--End tr -->
+                                            </tbody>
+                                        </table> <!-- table-->
+                                        <ul class="pagination" id="pagination"></ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div> <!-- building-list-->
+
+                </div> <!-- col-xs-12 -->
+            </div> <!-- end row-->
+
+        </div> <!-- page-content-->
+
+    </div>	<!--main-content-inner -->
+</div><!--main-content  -->
+
+
+
+<div id = "assignmentBuildingModal" class ="modal fade" role="dialog" layout:fragment="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"> <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLongTitle" > Danh sách nhân viên </h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="staffList">
+                    <thead>
+                    <tr style="font-family: VnBlack ; font-weight: bold; color: black;">
+                        <th> Chọn nhân viên </th>
+                        <th> Tên nhân viên </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div  class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnAssignBuilding"  style="border: 0px"> Giao Tòa Nhà </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modal" style="border: 0px">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

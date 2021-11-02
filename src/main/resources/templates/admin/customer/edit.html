@@ -1,0 +1,160 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index.html}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Chỉnh sửa người dùng </title>
+</head>
+<body>
+<div class="main-content" layout:fragment="content">
+    <div class="main-content-inner">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try {
+                    ace.settings.check('breadcrumbs', 'fixed')
+                } catch (e) {
+                }
+            </script>
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a href="">
+                    Trang chủ
+                    </a>
+                </li>
+                <li class="active">Chỉnh sửa khách hàng</li>
+            </ul><!-- /.breadcrumb -->
+        </div>
+        <div class="page-content" style="margin-bottom: -25px;">
+            <div class="page-header" style="padding: 3px">
+                <h1 style="font-size: 21px;">Thông tin khách hàng</h1>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form  class="form-horizontal" role="form" id="formSubmitCustomer" th:object="${customerEdit}" >
+                        <div class="form-group">
+                            <label th:for="fullName" class="col-sm-3 control-label no-padding-right"> Tên đầy đủ : </label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{fullName}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="phone" >Số điện thoại :</label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{phone}" />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right"  th:for="email" >Email : </label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{email}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right"  th:for="company" >Tên công ty : </label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{company}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right"  th:for="demand" >Nhu cầu  : </label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{demand}" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right" th:for="note" >Ghi chú :</label>
+                            <div class="col-sm-7">
+                                <textarea name="note" rows="4" cols="99" th:field="*{note}" >
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right"  th:for="status" >Trạng thái  : </label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{status}" />
+                            </div>
+                        </div>
+                        <input type="hidden"  id="customerId" th:field ="*{id}" th:value="${id}"/>
+                        <div class="clearfix form-actions">
+                            <div class="col-md-offset-3 col-md-9">
+                                <div th:if="${customerEdit.id != null}" >
+                                    <button class="btn btn-info" type="button"  id="btnUpdateCustomer" >
+                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                        Cập nhật khác hàng
+                                    </button>
+                                </div>
+
+                                <div th:if="${customerEdit.id == null}" >
+                                    <button class="btn btn-info" type="button"  id="btnAddCustomer" >
+                                        <i class="ace-icon fa fa-check bigger-110"></i>
+                                        Thêm khác hàng
+                                    </button>
+                                </div>
+                                <button class="btn" type="reset" style="    margin-left: 200px;   margin-top: -64px;">
+                                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                                    Hủy
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="page-content" th:if="${customerEdit.id != null}"  th:each="item : ${transactions}">
+            <div class="page-header" style="padding: 3px">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <h1  style="font-size: 21px;" th:text="${item.value}">
+                        </h1>
+                    </div>
+                    <div class="col-cs-9">
+                        <button style="float: right;margin-right: 10px;"
+                                class="dt-button buttons-colvis btn btn-white btn-primary btn-bold btnAddTransaction"
+                                data-toggle="tooltip"  title='Thêm hành động' th:id="${item.key}">
+                            <span><i class="fa fa-plus-circle sbigger-110 purple"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr style="font-family: VnBlack ; font-weight: bold; color: #000000;">
+                                <td class="col-sm-3">Ngày tạo</td>
+                                <td>Ghi chú</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="index : ${customerEdit.transaction}" th:if="${item.key == index.code}">
+                                    <th th:text="${index.createdDate}"></th>
+                                    <th th:text="${index.note}"></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    <form id="node">
+                                        <input type="text" style="width: 100%" name="node" th:id="'id_'+${item.key}"/>
+                                    </form>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end transactions -->
+    </div>
+</div>
+</body>
+</html>

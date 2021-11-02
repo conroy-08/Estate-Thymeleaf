@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="main-fragment ( customStyle,  content , model , customScript)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:utext="${title}"></title>
+    <link rel="stylesheet" th:href="@{admin/assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{admin/font-awesome/4.5.0/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{admin/assets/css/ace.min.css}" class="ace-main-stylesheet" id="main-ace-style"/>
+    <script type='text/javascript' th:src="@{admin/assets/js/ace-extra.min.js}"></script>
+    <link rel="stylesheet"
+          th:href="@{https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css}">
+    <link rel="stylesheet" th:href="@{//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css}">
+
+    <!-- jquery -->
+    <script type='text/javascript' th:src="@{admin/js/2.1.4/jquery.min.js}"></script>
+    <script th:src="@{admin/assets/paging/jquery.twbsPagination.js}"></script>
+    <!--sweetalert-->
+    <script type='text/javascript' th:src="@{admin/assets/sweetalert2/sweetalert2.min.js}"></script>
+    <link rel="stylesheet" th:href="@{admin/assets/sweetalert2/sweetalert2.min.css}">
+    <style>
+        .form-horizontal {
+            font-family: VnBlack;
+        }
+
+        .form-horizontal label {
+            font-family: VnBlack;
+            font-weight: 700;
+        }
+
+        .form-horizontal input {
+            height: 28px;
+            margin-bottom: 10px;
+        }
+
+        .form-horizontal input[type ="checkbox"] {
+            height: auto;
+        }
+
+        td > th {
+            font-family: VnBlack;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 0px;
+        }
+    </style>
+
+</head>
+<body class="no-skin">
+
+<!-- header -->
+<div id="navbar" class="navbar navbar-default ace-save-state">
+    <div class="navbar-header pull-left">
+        <a href="#" class="navbar-brand">
+            <small>
+                <i class="fa fa-leaf"></i>
+                Trang quản trị
+            </small>
+        </a>
+    </div>
+    <div class="navbar-buttons navbar-header pull-right" role="navigation">
+        <ul class="nav ace-nav">
+            <li class="light-blue">
+                <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                    Xin chào, <b th:text="${T(com.estate.utils.SecurityUtils).getPrincipal().getUsername()}"></b>
+                    <i class="ace-icon fa fa-caret-down"></i>
+                </a>
+
+                <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                    <li>
+                        <a href="">
+                            <i class="ace-icon fa fa-user"></i>
+                            Thông tin tài khoản
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <i class="ace-icon fa fa-key"></i>
+                            Đổi mật khẩu
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a th:href="@{/logout}">
+                            <i class="ace-icon fa fa-power-off"></i>
+                            Thoát
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- header -->
+
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+    </script>
+    <!-- menu -->
+    <div id="sidebar" class="sidebar  responsive  ace-save-state">
+        <script type="text/javascript">
+            try{ace.settings.loadState('sidebar')}catch(e){}
+        </script>
+        <div th:replace="admin/fragments/menu:: menu "></div>
+    </div>
+
+    <!-- menu -->
+
+    <!-- body -->
+    <div class="main-content" layout:fragment="content">
+
+    </div>
+
+    <div id = "assignmentBuildingModal" class ="modal fade" role="dialog" layout:fragment="modal">
+
+    </div>
+    <!-- footer -->
+    <div class="footer">
+        <div th:replace="admin/fragments/footer:: footer "></div>
+    </div>
+    <!-- footer -->
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse display">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+
+<!--jQuery Validation Plugin-->
+<script th:src="@{admin/js/jqueryvalidate/jquery.validate.min.js}"></script>
+
+<!--common javascript file-->
+<script type="text/javascript" th:src="@{admin/js/global_admin_script.js}"></script>
+
+<script th:src="@{admin/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery-ui.custom.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.ui.touch-punch.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.easypiechart.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.sparkline.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.flot.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.flot.pie.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.flot.resize.min.js}"></script>
+<script th:src="@{admin/assets/js/ace-elements.min.js}"></script>
+<script th:src="@{admin/assets/js/ace.min.js}"></script>
+
+<!-- page specific plugin scripts -->
+<script th:src="@{admin/assets/js/jquery-ui.min.js}"></script>
+<script th:src="@{admin/js/estate-script.js}"></script>
+
+
+</body>
+</html>

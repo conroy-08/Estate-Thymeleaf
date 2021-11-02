@@ -1,0 +1,254 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Trang chủ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{admin/assets/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{admin/font-awesome/4.5.0/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{admin/assets/css/ace.min.css}" class="ace-main-stylesheet" id="main-ace-style"/>
+    <script type='text/javascript' th:src="@{admin/assets/js/ace-extra.min.js}"></script>
+    <link rel="stylesheet"
+          th:href="@{https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css}">
+    <link rel="stylesheet" th:href="@{//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css}">
+
+    <!-- jquery -->
+    <script type='text/javascript' th:src="@{admin/js/2.1.4/jquery.min.js}"></script>
+    <script th:src="@{admin/assets/paging/jquery.twbsPagination.js}"></script>
+    <!--sweetalert-->
+    <script type='text/javascript' th:src="@{admin/assets/sweetalert2/sweetalert2.min.js}"></script>
+
+    <link rel="stylesheet" th:href="@{admin/assets/sweetalert2/sweetalert2.min.css}">
+    <style>
+        .form-horizontal {
+            font-family: VnBlack;
+        }
+
+        .form-horizontal label {
+            font-family: VnBlack;
+            font-weight: 700;
+        }
+
+        .form-horizontal input {
+            height: 28px;
+            margin-bottom: 10px;
+        }
+
+        .form-horizontal input[type ="checkbox"] {
+            height: auto;
+        }
+
+        td > th {
+            font-family: VnBlack;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body class="no-skin">
+<!-- header -->
+<div id="navbar" class="navbar navbar-default ace-save-state">
+    <div th:replace="admin/fragments/header:: header "></div>
+</div>
+
+<!-- header -->
+
+<div class="main-container" id="main-container">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+    </script>
+    <!-- menu -->
+    <div id="sidebar" class="sidebar  responsive  ace-save-state">
+        <script type="text/javascript">
+            try{ace.settings.loadState('sidebar')}catch(e){}
+        </script>
+        <div th:replace="admin/fragments/menu:: menu "></div>
+    </div>
+
+    <!-- menu -->
+
+    <!-- body -->
+    <div class="main-content" layout:fragment="content">
+
+    </div>
+
+    <div id = "assignmentBuildingModal" class ="modal fade" role="dialog" layout:fragment="modal">
+
+    </div>
+    <!-- footer -->
+    <div class="footer">
+        <div th:replace="admin/fragments/footer:: footer "></div>
+    </div>
+    <!-- footer -->
+
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse display">
+        <i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
+</div>
+
+<!--jQuery Validation Plugin-->
+<script th:src="@{admin/js/jqueryvalidate/jquery.validate.min.js}"></script>
+
+<!--common javascript file-->
+<script type="text/javascript" th:src="@{admin/js/global_admin_script.js}"></script>
+
+<script th:src="@{admin/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery-ui.custom.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.ui.touch-punch.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.easypiechart.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.sparkline.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.flot.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.flot.pie.min.js}"></script>
+<script th:src="@{admin/assets/js/jquery.flot.resize.min.js}"></script>
+<script th:src="@{admin/assets/js/ace-elements.min.js}"></script>
+<script th:src="@{admin/assets/js/ace.min.js}"></script>
+
+<!-- page specific plugin scripts -->
+<script th:src="@{admin/assets/js/jquery-ui.min.js}"></script>
+<script th:src="@{admin/js/estate-script.js}"></script>
+
+
+<script type="text/javascript" >
+
+    /* assignment building */
+    let buildingId ;
+    function assignmentBuilding(Id) {
+        buildingId = Id;
+        loadStaffBuilding(Id);
+        openModelAssignmentBuilding();
+    }
+    function openModelAssignmentBuilding() {
+        $('#assignmentBuildingModal').modal();
+    }
+    /* Load staff */
+
+    function  loadStaffBuilding(id){
+    $.ajax({
+        url: "/api/building/"+id+"/staffs",
+        type: 'GET',
+        success: function (response) {
+            let row ='';
+            $.each(response.data ,function (index, item){
+                row+=' <tr> '
+                row+=' <td> <input type="checkbox" value='+ item.staffId +'  id="checkbox_'+ item.staffId +'" class="check-box-element" '+item.buildingChecked+'  /></td>'
+                row+=' <td> ' + item.fullName + '</td>'
+                row+=' </tr> '
+            })
+            $('#staffList tbody').html(row);
+        },
+        error: function (error) {
+            console.log("fail")
+        }
+    })
+}
+
+/* assignment building */
+    $('#btnAssignBuilding').click(function () {
+        let dataArray = $('#staffList tbody input[type=checkbox]:checked').map(function () {
+            return $(this).val();
+        }).get();
+        let data = {};
+        data['userIds'] = dataArray;
+        data['id'] = buildingId;
+        assignBuilding(data );
+    })
+    function assignBuilding(data) {
+        $.ajax({
+            url : "/api/building/assignment",
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(data) {
+                console.log("success");
+                window.location.href = "/building-list"
+                alert("success");
+            },
+            error: function() {
+                console.log("fail");
+                window.location.href = "/building-list"
+                alert("fail");
+            }
+        });
+    }
+
+
+    /* customer*/
+    $('#btnSearch').click(function (e){
+        e.preventDefault();
+        $('#listForm').submit();
+    })
+
+    let customerId ;
+    /* load modal */
+    function assignmentCustomer(Id) {
+        customerId = Id;
+        loadStaffCustomer(Id);
+        openModelAssignmentCustomer();
+    }
+    function openModelAssignmentCustomer() {
+        $('#assignmentCustomerModal').modal();
+    }
+    /* Load staff */
+    function loadStaffCustomer(id) {
+        $.ajax({
+            url : '/api/customer/'+id+'/staffs',
+            type: 'GET',
+            success: function (response) {
+                let row ='';
+                $.each(response.data ,function (index, i ){
+                    row+=' <tr> '
+                    row+=' <td> <input type="checkbox" value='+ i.staffId +' id="checkbox_'+ i.staffId +'" class="check-box-element" '+i.customerChecked+'  /></td>'
+                    row+=' <td> ' + i.fullName + '</td>'
+                    row+=' </tr> '
+                })
+                $('#staffList tbody').html(row);
+            },
+            error: function (error) {
+                console.log("fail")
+            }
+        });
+    }
+
+
+    /* assignment customer */
+    $('#btnAssignCustomer').click(function () {
+        let dataArray = $('#staffList tbody input[type=checkbox]:checked').map(function () {
+            return $(this).val();
+        }).get();
+        let data = {};
+        data['userIds'] = dataArray;
+        data['id'] = customerId;
+        assignCustomer(data );
+    })
+    function assignCustomer(data) {
+        $.ajax({
+            url : "/api/customer/assignment",
+            data: JSON.stringify(data),
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(data) {
+                console.log("success");
+                window.location.href = "/customer-list"
+                alert("success");
+            },
+            error: function() {
+                console.log("fail");
+                window.location.href = "/customer-list"
+                alert("fail");
+            }
+        });
+    }
+
+
+
+
+</script>
+</body>
+</html>

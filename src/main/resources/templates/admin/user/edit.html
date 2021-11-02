@@ -1,0 +1,85 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{index.html}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Chỉnh sửa nhân viên</title>
+</head>
+<body>
+<div class="main-content" layout:fragment="content">
+    <div class="main-content-inner">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try {
+                    ace.settings.check('breadcrumbs', 'fixed')
+                } catch (e) {
+                }
+            </script>
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a href="#">Trang chủ</a>
+                </li>
+                <li class="active">Chỉnh sửa người dùng</li>
+            </ul><!-- /.breadcrumb -->
+        </div>
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <form id="formEdit" class="form-horizontal" th:object="${userEdit}">
+                        <div id="profile">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">Vai trò</label>
+                                <div class="col-sm-9">
+                                    <select th:field="*{roleCode}">
+                                        <option value=""> -- Chọn vai trò -- </option>
+                                        <option th:each="entry : ${Role.entrySet()}"
+                                                th:value="${entry.key}"
+                                                th:utext="${entry.value}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">Tên đăng nhập</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="userName" class="form-control" disabled="true" th:if="${userEdit.id != null}" th:value="*{userName}"/>
+                                    <input type="text" id="userName" class="form-control"  th:if="${userEdit.id == null}"  th:field="*{userName}"/>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">Tên đầy đủ</label>
+                                <div class="col-sm-9">
+                                    <input type="text"  class="form-control" th:field ="*{fullName}" />
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                            <div class="col-sm-12">
+                                <label class="col-sm-3 control-label no-padding-right message-info"></label>
+                                <div th:if="${userEdit.id != null}" >
+                                    <input type="button" class="btn btn-white btn-warning btn-bold"
+                                           value="Cập nhật người dùng" id="btnUpdateUsers"/>
+                                    <input type="button" class="btn btn-white btn-warning btn-bold"
+                                           value="Reset mật khẩu" id="btnResetPassword"/>
+                                    <img src="/img/loading.gif" style="display: none; height: 100px" id="loading_image">
+                                </div>
+                                <div th:if="${userEdit.id == null}" >
+                                    <input type="button" class="btn btn-white btn-warning btn-bold"
+                                           value="Thêm mới người dùng" id="btnAddUsers"/>
+                                    <img src="/img/loading.gif" style="display: none; height: 100px" id="loadingImage">
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden"  id="userId" th:field ="*{id}" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- end content-->
+</body>
+</html>
