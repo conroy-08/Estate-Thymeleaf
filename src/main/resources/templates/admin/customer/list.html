@@ -211,5 +211,103 @@
 </div>
 
 
+<th:block layout:fragment="script">
+<script>
+        console.log("This is my script for customer ")
+
+        $('#btnSearchCustomer').click(function (e){
+            e.preventDefault();
+            $('#listFormCustomer').submit();
+        })
+
+
+        let customerId ;
+        /* load modal */
+        function assignmentCustomer(Id) {
+            customerId = Id;
+            loadStaffCustomer(Id);
+            openModelAssignmentCustomer();
+        }
+        function openModelAssignmentCustomer() {
+            $('#assignmentCustomerModal').modal();
+        }
+        /* Load staff */
+        function loadStaffCustomer(id) {
+            $.ajax({
+                url : '/api/customer/'+id+'/staffs',
+                type: 'GET',
+                success: function (response) {
+                    let row ='';
+                    $.each(response.data ,function (index, i ){
+                        row+=' <tr> '
+                        row+=' <td> <input type="checkbox" value='+ i.staffId +' id="checkbox_'+ i.staffId +'" class="check-box-element" '+i.customerChecked+'  /></td>'
+                        row+=' <td> ' + i.fullName + '</td>'
+                        row+=' </tr> '
+                    })
+                    $('#staffList tbody').html(row);
+                },
+                error: function (error) {
+                    console.log("fail")
+                }
+            });
+        }
+
+
+        /* assignment customer */
+        $('#btnAssignCustomer').click(function () {
+            let dataArray = $('#staffList tbody input[type=checkbox]:checked').map(function () {
+                return $(this).val();
+            }).get();
+            let data = {};
+            data['userIds'] = dataArray;
+            data['id'] = customerId;
+            assignCustomer(data );
+        })
+        function assignCustomer(data) {
+            $.ajax({
+                url : "/api/customer/assignment",
+                data: JSON.stringify(data),
+                type: 'POST',
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log("success");
+                    window.location.href = "/customer-list"
+                    alert("success");
+                },
+                error: function() {
+                    console.log("fail");
+                    window.location.href = "/customer-list"
+                    alert("fail");
+                }
+            });
+        }
+
+        /* delete customer */
+        function warningBeforeDeleteCustomer() {
+            showAlertBeforeDelete(function () {
+                event.preventDefault();
+                let dataArray = $('tbody input[type=checkbox]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+                deteleCustomer(dataArray);
+            });
+        }
+        function deteleCustomer(data) {
+            $.ajax({
+                url: '/api/customer',
+                type: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    window.location.href = "/customer-list";
+                },
+                error: function (res) {
+                    window.location.href = "/customer-list";
+                }
+            });
+        }
+</script>
+</th:block>
+
 </body>
 </html>

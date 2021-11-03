@@ -153,9 +153,8 @@
                                     </div>
                                 </div> <!-- widget-main -->
                             </div> <!-- widget-body  and search Building-->
-                            <input type="hidden"  th:value="${modelSearch.page}" id="page" name="page"/>
+                            <input type="hidden" value="1" id="page" name="page"/>
                             <input type="hidden" value="" id="limit" name="limit"/>
-                            <input type="hidden" th:value="${modelSearch.totalPage}" id="totalPage" name="totalPage"/>
                         </form>
                     </div> <!-- widget-box -->
                     <div class="table-btn-controls" >
@@ -224,6 +223,10 @@
                                                         <a class="btn btn-xs btn-primary " data-toggle="tooltip"
                                                            title="Cập nhật bài viết"   th:href="@{'/building-edit-'+ ${item.id}}"/><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                         </a>
+                                                        <a class="btn btn-xs btn-primary " data-toggle="tooltip"
+                                                           title="Thông tin tòa nhà "   th:href="@{'/building-view-'+ ${item.id}}" /><i class="fa fa-eye" aria-hidden="true"></i>
+                                                        </a>
+
                                                     </td>
                                                 </tr> <!--End tr -->
                                             </tbody>
@@ -275,6 +278,126 @@
     </div>
 </div>
 
+<th:block layout:fragment="script">
+<script>
+        console.log("This is my script for building  ")
+
+
+        /* search */
+        $('#btnSearch').click(function (e){
+            e.preventDefault();
+            $('#listFormBuilding').submit();
+        })
+
+        /* assignment building */
+        let buildingId ;
+        function assignmentBuilding(Id) {
+            buildingId = Id;
+            loadStaffBuilding(Id);
+            openModelAssignmentBuilding();
+        }
+        function openModelAssignmentBuilding() {
+            $('#assignmentBuildingModal').modal();
+        }
+        /* Load staff */
+
+        function  loadStaffBuilding(id){
+            $.ajax({
+                url: "/api/building/"+id+"/staffs",
+                type: 'GET',
+                success: function (response) {
+                    let row ='';
+                    $.each(response.data ,function (index, item){
+                        row+=' <tr> '
+                        row+=' <td> <input type="checkbox" value='+ item.staffId +'  id="checkbox_'+ item.staffId +'" class="check-box-element" '+item.buildingChecked+'  /></td>'
+                        row+=' <td> ' + item.fullName + '</td>'
+                        row+=' </tr> '
+                    })
+                    $('#staffList tbody').html(row);
+                },
+                error: function (error) {
+                    console.log("fail")
+                }
+            })
+        }
+
+        /* assignment building */
+        $('#btnAssignBuilding').click(function () {
+            let dataArray = $('#staffList tbody input[type=checkbox]:checked').map(function () {
+                return $(this).val();
+            }).get();
+            let data = {};
+            data['userIds'] = dataArray;
+            data['id'] = buildingId;
+            assignBuilding(data );
+        })
+        function assignBuilding(data) {
+            $.ajax({
+                url : "/api/building/assignment",
+                data: JSON.stringify(data),
+                type: 'POST',
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log("success");
+                    window.location.href = "/building-list"
+                    alert("success");
+                },
+                error: function() {
+                    console.log("fail");
+                    window.location.href = "/building-list"
+                    alert("fail");
+                }
+            });
+        }
+
+        /* delete building */
+
+        function warningBeforeDelete() {
+            showAlertBeforeDelete(function () {
+                event.preventDefault();
+                let dataArray = $('tbody input[type=checkbox]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+                deleteBuilder(dataArray);
+            });
+        }
+        function deleteBuilder(data) {
+            $.ajax({
+                url: '/api/building',
+                type: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    window.location.href = "/building-list";
+                },
+                error: function (res) {
+                    window.location.href = "/building-list";
+                }
+            });
+        }
+
+        /* pagination */
+        let  totalPages = [[${modelSearch.totalPage}]];
+        console.log(" TotalPage is : " + totalPages);
+        let currentPage = [[${modelSearch.page}]];
+        $(function () {
+            window.pagObj = $('#pagination').twbsPagination({
+                totalPages: totalPages,
+                visiblePages: 5,
+                startPage : currentPage,
+                onPageClick: function (event, page) {
+                    if (currentPage != page){
+                        $('#page').val(page);
+                        $('#limit').val(5);
+                        $('#listFormBuilding').submit();
+                    }
+                    console.info(page + ' (from options)');
+                }
+            })
+        });
+
+</script>
+</th:block>
 
 </body>
 </html>

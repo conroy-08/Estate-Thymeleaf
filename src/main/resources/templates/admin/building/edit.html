@@ -208,7 +208,7 @@
                             </div>
 
                         </div>
-                        <input type="hidden"  id="buildlingid" th:field ="*{id}" th:value="${id}"/>
+                        <input type="hidden"  id="buildlingId" th:field ="*{id}" th:value="${id}"/>
                         <div class="clearfix form-actions">
                             <div class="col-md-offset-3 col-md-9" >
                                   <div th:if="${buildingEdit.id != null}" >
@@ -236,5 +236,80 @@
         </div>
     </div>
 </div>
+<th:block layout:fragment="script">
+<script>
+    console.log("this is my script for edit building")
+    /* Add building */
+    $('#btnAddBuilding').click(function (e) {
+        e.preventDefault();
+        let data = {};
+        let buildingTypes =[];
+        let formdata = $('#formSubmit').serializeArray();
+        $.each(formdata, function (i,v){
+            if (v.name == 'buildingTypes'){
+                buildingTypes.push(v.value);
+            }else {
+                data[""+v.name+""] = v.value;
+            }
+        })
+        data['buildingTypes'] = buildingTypes;
+        addBuilding(data);
+    })
+    function  addBuilding(data){
+        $.ajax({
+            url : '/api/building',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (result) {
+                console.log(result)
+                window.location.href = "/building-list?page=1&limit=5"
+            },
+            error: function (error) {
+                console.log(error)
+                window.location.href = "/building-list?page=1&limit=5"
+            }
+        });
+    }
+
+    /* update building */
+    $('#btnUpdateBuilding').click(function (e) {
+        e.preventDefault();
+        let data = {};
+        let buildingTypes =[];
+        let dataForm = $('#formSubmit').serializeArray();
+        $.each(dataForm, function (i,v){
+            if (v.name == 'buildingTypes'){
+                buildingTypes.push(v.value);
+            }else {
+                data[""+v.name+""] = v.value;
+            }
+        })
+        let idOfBuilding = $('#buildlingId').val();
+        data['buildingTypes'] = buildingTypes;
+        data['id'] = idOfBuilding;
+        updateBuilding(data);
+    })
+
+    function  updateBuilding(data){
+        $.ajax({
+            url : '/api/building',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (result) {
+                console.log(result)
+                window.location.href = "/building-list?page=1&limit=5"
+            },
+            error: function (error) {
+                console.log(error)
+                window.location.href = "/building-list?page=1&limit=5"
+            }
+        });
+    }
+</script>
+</th:block>
 </body>
 </html>

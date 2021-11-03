@@ -59,6 +59,7 @@ public class BuildingConverter {
                 .toArray(String[]::new);
         String address = Arrays.stream(firstArray).map(item -> item + " ")
                 .collect(Collectors.joining(", "));
+        dto.setDistrict(sb.toString());
         return address;
 
     }

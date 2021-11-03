@@ -156,5 +156,100 @@
         </div> <!-- end transactions -->
     </div>
 </div>
+<th:block layout:fragment="script">
+<script>
+    console.log("This is my script for  edit customer   ")
+
+    $('#btnAddCustomer').click(function (e) {
+        e.preventDefault();
+        let data ={};
+        let dataForm = $('#formSubmitCustomer').serializeArray();
+        $.each(dataForm , function (i,v){
+            data[""+v.name+""] = v.value;
+        })
+        addCustomer(data);
+    })
+    function  addCustomer(data){
+        $.ajax({
+            url : '/api/customer',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (result) {
+                console.log(result)
+                window.location.href = "/customer-list"
+            },
+            error: function (error) {
+                console.log(error)
+                window.location.href = "/customer-list"
+            }
+        });
+    }
+
+    $('#btnUpdateCustomer').click(function (e) {
+        e.preventDefault();
+        let data ={};
+        let dataForm = $('#formSubmitCustomer').serializeArray();
+        $.each(dataForm , function (i,v){
+            data[""+v.name+""] = v.value;
+        })
+        let idOfCustomer = $('#customerId').val();
+        data['id'] = idOfCustomer;
+        updateCustomer(data);
+    })
+
+    function  updateCustomer(data){
+        $.ajax({
+            url : '/api/customer',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (result) {
+                console.log(result)
+                window.location.href = "/customer-list"
+            },
+            error: function (error) {
+                console.log(error)
+                window.location.href = "/customer-list"
+            }
+        });
+    }
+
+    /* transaction */
+    $('.btnAddTransaction').click(function (e) {
+        let idNoteForm = 'id_'+this.id;
+        let note = document.getElementById(idNoteForm).value;
+        let code = this.id;
+        let customerId = $('#customerId').val();
+        let data ={};
+        data['note'] = note;
+        data['code'] = code;
+        data['customerId'] = customerId;
+        addTransaction(data);
+    })
+    function  addTransaction(data){
+        $.ajax({
+            url : '/api/customer/transaction',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            success: function (result) {
+                console.log(result)
+                window.location.href = "/customer-list"
+            },
+            error: function (error) {
+                console.log(error)
+                window.location.href = "/customer-list"
+            }
+        })
+    }
+
+
+</script>
+</th:block>
+
 </body>
 </html>

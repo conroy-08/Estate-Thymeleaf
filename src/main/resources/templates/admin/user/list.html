@@ -68,7 +68,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label"></label>
                                                     <div class="col-sm-8">
-                                                        <button id="btnSearch" type="button"
+                                                        <button id="btnSearchUser" type="button"
                                                                 class="btn btn-sm btn-success">
                                                             Tìm kiếm
                                                             <i class="ace-icon fa fa-arrow-right icon-on-right bigger-110"></i>
@@ -145,5 +145,14 @@
         </div>
 
 </div>
+<th:block layout:fragment="script">
+     <script>
+         console.log("this is my script for user")
+         $('#btnSearchUser').click(function (e){
+             e.preventDefault();
+             $('#listFormUser').submit();
+         })
+     </script>
+</th:block>
 </body>
 </html>

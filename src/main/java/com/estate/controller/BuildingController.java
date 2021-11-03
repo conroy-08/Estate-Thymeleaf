@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Optional;
+
 
 
 @Controller(value = "buildingControllerOfAdmin")
@@ -31,9 +31,8 @@ public class BuildingController {
         buildingDTO.setTotalItems(buildingService.count(buildingDTO));
         buildingDTO.setTotalPage((int) Math.ceil((double) buildingDTO.getTotalItems() / buildingDTO.getLimit()));
         buildingDTO.setListResult(buildingService.findByCondition(buildingDTO,pageable));
-        mav.addObject("districts", DataUtils.getDistricts());
         mav.addObject("staffs", userService.getStaffs());
-        mav.addObject("buildingTypes", DataUtils.getBuildingTypes());
+        addObject(mav);
         return mav;
     }
 
@@ -42,20 +41,30 @@ public class BuildingController {
         ModelAndView mav = new ModelAndView("admin/building/edit");
         BuildingDTO buildingDTO = new BuildingDTO();
         mav.addObject("buildingEdit", buildingDTO);
-
-        mav.addObject("buildingTypes", DataUtils.getBuildingTypes());
-        mav.addObject("districts", DataUtils.getDistricts());
+        addObject(mav);
         return mav;
     }
 
     @RequestMapping(value = "/building-edit-{id}", method = RequestMethod.GET)
-    public ModelAndView buildingEdit(@PathVariable(value = "id") Long id) throws Exception {
+    public ModelAndView buildingEdit(@PathVariable(value = "id") Long id)  {
         ModelAndView mav = new ModelAndView("admin/building/edit");
         BuildingDTO buildingDTO = buildingService.findById(id);
         mav.addObject("buildingEdit", buildingDTO);
+        addObject(mav);
+        return mav;
+    }
+
+    @RequestMapping(value = "/building-view-{id}", method = RequestMethod.GET)
+    public ModelAndView buildingView(@PathVariable(value = "id") Long id) {
+        ModelAndView mav = new ModelAndView("admin/building/view");
+        BuildingDTO buildingDTO = buildingService.findById(id);
+        mav.addObject("buildingView", buildingDTO);
+        addObject(mav);
+        return mav;
+    }
+    private void addObject(ModelAndView mav){
         mav.addObject("buildingTypes", DataUtils.getBuildingTypes());
         mav.addObject("districts", DataUtils.getDistricts());
-        return mav;
     }
 
 }
