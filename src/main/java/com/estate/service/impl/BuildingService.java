@@ -18,8 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +40,8 @@ public class BuildingService implements IBuildingService {
     @Autowired
     private RentAreaRepository areaRepository;
 
+
+
     @Override
     public List<BuildingDTO> findByCondition(BuildingDTO buildingDTO , Pageable pageable) {
         BuildingSearchBuilder builder = initBuildingBuilder(buildingDTO);
@@ -56,7 +58,7 @@ public class BuildingService implements IBuildingService {
 
     @Override
     @Transactional
-    public BuildingDTO saveOrUpdate(Long id, BuildingDTO buildingDTO) throws NotFoundException {
+    public BuildingDTO saveOrUpdate(Long id, BuildingDTO buildingDTO) throws NotFoundException, IOException {
         BuildingEntity buildingEntity = null;
         if (id != null && id > 0) {
             BuildingEntity oldBuilding = Optional.ofNullable(buildingRepository.findById(id).get())

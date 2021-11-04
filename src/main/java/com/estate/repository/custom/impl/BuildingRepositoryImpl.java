@@ -43,7 +43,7 @@ public class BuildingRepositoryImpl  implements BuildingRepositoryCustom {
     @Override
     public Long count(BuildingSearchBuilder builder) {
         try {
-            StringBuilder sql = new StringBuilder("select COUNT(*) from building as b  where 1 = 1");
+            StringBuilder sql = new StringBuilder("select COUNT(*) from building as b  where 1 = 1 ");
             createWhereClausePart1(builder, sql);
             createWhereClausePart2(builder, sql);
             Query query = entityManager.createNativeQuery(sql.toString());

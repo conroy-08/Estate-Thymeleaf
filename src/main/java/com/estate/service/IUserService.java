@@ -1,5 +1,6 @@
 package com.estate.service;
 
+import com.estate.dto.PasswordDTO;
 import com.estate.dto.UserDTO;
 import com.estate.dto.response.StaffReponseDTO;
 import javassist.NotFoundException;
@@ -10,12 +11,16 @@ import java.util.Map;
 
 public interface IUserService {
     UserDTO findOneByUserNameAndStatus(String name, int status);
+    UserDTO findByUserName(String userName) throws NotFoundException;
     Map<Long, String> getStaffs();
     List<StaffReponseDTO> findAllStaff(Long buildingId, Long customerId);
     List<UserDTO> getUsers(String searchValue ,  Pageable pageable);
     int getTotalItems(String searchValue);
     UserDTO save(UserDTO newUser) throws NotFoundException;
     UserDTO update(Long userId , UserDTO updateUser) throws NotFoundException;
-    UserDTO findUserById(long id);
+    void delete(List<Long> ids) throws NotFoundException;
+    UserDTO findUserById(long id) throws NotFoundException;
+    UserDTO resetPassword(long id) throws NotFoundException;
+    void updatePassword(long id , PasswordDTO passwordDTO) throws Exception;
 
 }

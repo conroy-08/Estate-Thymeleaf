@@ -78,6 +78,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                        <input type="hidden" value="1" id="page" name="page"/>
+                                        <input type="hidden" value="" id="limit" name="limit" th:field="*{limit}"/>
                                     </form>
                                 </div>
 
@@ -96,7 +98,7 @@
                                             <button id="btnDelete" type="button" disabled
                                                     class="dt-button buttons-html5 btn btn-white btn-primary btn-bold"
                                                     data-toggle="tooltip"
-                                                    title="Xóa bài viết" onclick="warningBeforeDelete()">
+                                                    title="Xóa bài viết" onclick="warningBeforeDeleteUser()">
 															<span>
 																<i class="fa fa-trash-o bigger-110 pink"></i>
 															</span>
@@ -136,6 +138,7 @@
                                         </tr>
                                         </tbody>
                                     </table> <!-- table-->
+                                    <ul class="pagination" id="pagination"></ul>
                                 </div>
                             </div>
                         </div>
@@ -152,6 +155,51 @@
              e.preventDefault();
              $('#listFormUser').submit();
          })
+
+         /* delete users*/
+         function warningBeforeDeleteUser() {
+             showAlertBeforeDelete(function () {
+                 event.preventDefault();
+                 let dataArray = $('tbody input[type=checkbox]:checked').map(function () {
+                     return $(this).val();
+                 }).get();
+                 deteleUser(dataArray);
+             });
+         }
+         function deteleUser(data) {
+             $.ajax({
+                 url: '/api/user',
+                 type: 'DELETE',
+                 contentType: 'application/json',
+                 data: JSON.stringify(data),
+                 success: function (res) {
+                     window.location.href = "/user-list";
+                 },
+                 error: function (error) {
+                     console.log(error);
+                     window.location.href = "/user-list";
+                 }
+             });
+         }
+
+         /* pagination */
+         let totalPages = [[${userModel.totalPage}]];
+         let currentPage = [[${userModel.page}]];
+         $(function () {
+             window.pagObj = $('#pagination').twbsPagination({
+                 totalPages:totalPages,
+                 visiblePages: 5,
+                 startPage : currentPage,
+                 onPageClick: function (event, page) {
+                     if (currentPage != page){
+                         $('#page').val(page);
+                         $('#limit').val(5);
+                         $('#listFormUser').submit();
+                     }
+                     console.info(page + ' (from options)');
+                 }
+             })
+         });
      </script>
 </th:block>
 </body>

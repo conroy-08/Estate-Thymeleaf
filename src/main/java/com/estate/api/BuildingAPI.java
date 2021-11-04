@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController(value = "buildingApiOfAdmin")
@@ -43,12 +44,12 @@ public class BuildingAPI {
     }
 
     @PostMapping
-    public ResponseEntity<BuildingDTO> createBuilding(@RequestBody BuildingDTO newBuilding) throws NotFoundException {
+    public ResponseEntity<BuildingDTO> createBuilding(@RequestBody BuildingDTO newBuilding) throws NotFoundException, IOException {
         return ResponseEntity.status(HttpStatus.OK).body(buildingService.saveOrUpdate(newBuilding.getId(), newBuilding));
     }
 
     @PutMapping
-    public ResponseEntity<BuildingDTO> updateBuilding(@RequestBody BuildingDTO updateBuilding) throws NotFoundException {
+    public ResponseEntity<BuildingDTO> updateBuilding(@RequestBody BuildingDTO updateBuilding) throws NotFoundException,IOException{
         return ResponseEntity.status(HttpStatus.OK).body(buildingService.saveOrUpdate(updateBuilding.getId(), updateBuilding));
     }
 

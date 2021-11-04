@@ -25,13 +25,13 @@
 
                 <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                     <li>
-                        <a href="">
+                        <a th:href="@{'/user-profile-'+${T(com.estate.utils.SecurityUtils).getPrincipal().getUsername()}}">
                             <i class="ace-icon fa fa-user"></i>
                             Thông tin tài khoản
                         </a>
                     </li>
                     <li>
-                        <a href="">
+                        <a th:href="@{/user-profile-password}">
                         <i class="ace-icon fa fa-key"></i>
                         Đổi mật khẩu
                         </a>

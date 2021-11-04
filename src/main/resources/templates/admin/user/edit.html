@@ -32,7 +32,7 @@
                         <div id="profile">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Vai trò</label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-7">
                                     <select th:field="*{roleCode}">
                                         <option value=""> -- Chọn vai trò -- </option>
                                         <option th:each="entry : ${Role.entrySet()}"
@@ -45,32 +45,50 @@
                             <div class="space-4"></div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Tên đăng nhập</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="userName" class="form-control" disabled="true" th:if="${userEdit.id != null}" th:value="*{userName}"/>
-                                    <input type="text" id="userName" class="form-control"  th:if="${userEdit.id == null}"  th:field="*{userName}"/>
+                                <div class="col-sm-7">
+                                    <input type="text" id="userName" class="form-control" th:disabled="${userEdit.id != null}"  th:value="*{userName}"/>
+                                    <!--<input type="text" id="userName" class="form-control"  th:if="${userEdit.id == null}"  th:field="*{userName}"/>-->
                                 </div>
                             </div>
                             <div class="space-4"></div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Tên đầy đủ</label>
-                                <div class="col-sm-9">
+                                <div class="col-sm-7">
                                     <input type="text"  class="form-control" th:field ="*{fullName}" />
                                 </div>
                             </div>
-                            <div class="space-4"></div>
-                            <div class="col-sm-12">
-                                <label class="col-sm-3 control-label no-padding-right message-info"></label>
-                                <div th:if="${userEdit.id != null}" >
-                                    <input type="button" class="btn btn-white btn-warning btn-bold"
-                                           value="Cập nhật người dùng" id="btnUpdateUsers"/>
-                                    <input type="button" class="btn btn-white btn-warning btn-bold"
-                                           value="Reset mật khẩu" id="btnResetPassword"/>
-                                    <img src="/img/loading.gif" style="display: none; height: 100px" id="loading_image">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">Email</label>
+                                <div class="col-sm-7">
+                                    <input type="text"  class="form-control" th:field ="*{email}" />
                                 </div>
-                                <div th:if="${userEdit.id == null}" >
-                                    <input type="button" class="btn btn-white btn-warning btn-bold"
-                                           value="Thêm mới người dùng" id="btnAddUsers"/>
-                                    <img src="/img/loading.gif" style="display: none; height: 100px" id="loadingImage">
+                            </div>
+                            <div class="space-4"></div>
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9" >
+                                    <div th:if="${userEdit.id != null}" >
+                                        <button class="btn btn-info" type="button"  id="btnUpdateUsers" >
+                                            <i class="ace-icon fa fa-check bigger-110"></i>
+                                            Cập nhật người dùng
+                                        </button>
+                                        <button class="btn btn-info" type="button"  id="btnResetPassword" >
+                                            <i class="ace-icon fa fa-check bigger-110"></i>
+                                            Reset mật khẩu
+                                        </button>
+                                        <!--<img src="/img/loading.gif" style="display: none; height: 100px" id="loading_image">-->
+                                    </div>
+
+                                    <div th:if="${userEdit.id == null}" >
+                                        <button class="btn btn-info" type="button"  id="btnAddUsers" >
+                                            <i class="ace-icon fa fa-check bigger-110"></i>
+                                            Thêm mới người dùng
+                                        </button>
+                                        <button class="btn" type="reset" >
+                                            <i class="ace-icon fa fa-undo bigger-110"></i>
+                                            Hủy
+                                        </button>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -153,6 +171,30 @@
                     window.location.href = "/user-list";
                 }
             });
+        }
+
+        /* reset password */
+        $('#btnResetPassword').click(function (event){
+            event.preventDefault();
+           /* $('#loading_image').show();*/
+            resetPass($('#userId').val());
+        })
+
+        function resetPass(id){
+            $.ajax({
+                url: '/api/user/password-'+id+'/reset',
+                type: 'PUT',
+                dataType: 'json',
+                success: function (res) {
+                    /*$('#loading_image').hide();*/
+                    window.location.href = "/user-edit-"+res.id+"?message=reset_password_success";
+                    alert("success")
+                },
+                error: function (res) {
+                    window.location.href = "/user-edit-"+id+"?message=error_system";
+                    alert("false")
+                }
+            })
         }
 
 </script>

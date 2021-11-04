@@ -2,6 +2,7 @@ package com.estate.service.impl;
 
 import com.estate.constant.SystemConstant;
 import com.estate.converter.UserConverter;
+import com.estate.dto.PasswordDTO;
 import com.estate.dto.UserDTO;
 import com.estate.dto.response.StaffReponseDTO;
 import com.estate.entity.RoleEntity;
@@ -43,6 +44,15 @@ public class UserService implements IUserService {
     @Override
     public UserDTO findOneByUserNameAndStatus(String name, int status) {
         return userConverter.convertToDto(userRepository.findOneByUserNameAndStatus(name, status));
+    }
+
+    @Override
+    public UserDTO findByUserName(String userName) throws NotFoundException {
+        UserEntity userEntity = Optional.ofNullable(userRepository.findOneByUserName(userName))
+                        .orElseThrow(() -> new NotFoundException("Customer not found !"));
+        UserDTO userDTO = userConverter.convertToDto(userEntity);
+        return userDTO;
+
     }
 
     @Override
@@ -132,13 +142,52 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO findUserById(long id) {
-        UserEntity entity = userRepository.findById(id).get();
+    @Transactional
+    public void delete(List<Long> ids) throws NotFoundException {
+        long count = userRepository.countByIdIn(ids);
+        if (count != ids.size()) {
+            throw new NotFoundException("User not found !");
+        }else{
+            for (Long item : ids) {
+                UserEntity userEntity = userRepository.findById(item).get();
+                userEntity.setStatus(0);
+                userRepository.save(userEntity);
+            }
+        }
+    }
+
+    @Override
+    public UserDTO findUserById(long id) throws NotFoundException {
+        UserEntity entity = Optional.ofNullable(userRepository.findById(id).get())
+                .orElseThrow(() -> new NotFoundException("Role not found !"));
         List<RoleEntity> roles = entity.getRoles();
         UserDTO dto = userConverter.convertToDto(entity);
         roles.forEach(item -> {
             dto.setRoleCode(item.getCode());
         });
         return dto;
+    }
+
+    @Override
+    @Transactional
+    public UserDTO resetPassword(long id) throws NotFoundException {
+        UserEntity userEntity = Optional.ofNullable(userRepository.findById(id).get())
+                .orElseThrow(() -> new NotFoundException("User not found !"));
+        userEntity.setPassword(passwordEncoder.encode(SystemConstant.PASSWORD_DEFAULT));
+        return userConverter.convertToDto(userRepository.save(userEntity));
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(long id, PasswordDTO passwordDTO) throws Exception {
+        UserEntity userEntity = Optional.ofNullable(userRepository.findById(id).get())
+                .orElseThrow(() -> new NotFoundException("User not found !"));
+        if (passwordEncoder.matches(passwordDTO.getOldPassword(),userEntity.getPassword())
+           && passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword())){
+            userEntity.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+            userRepository.save(userEntity);
+        }else{
+            throw new Exception(SystemConstant.CHANGE_PASSWORD_FAIL);
+        }
     }
 }
