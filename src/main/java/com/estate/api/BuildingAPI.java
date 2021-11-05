@@ -6,11 +6,14 @@ import com.estate.dto.response.ResponseDTO;
 import com.estate.dto.response.StaffReponseDTO;
 import com.estate.service.IBuildingService;
 import com.estate.service.IUserService;
+import com.estate.utils.FileUtils;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -45,11 +48,13 @@ public class BuildingAPI {
 
     @PostMapping
     public ResponseEntity<BuildingDTO> createBuilding(@RequestBody BuildingDTO newBuilding) throws NotFoundException, IOException {
+       /* String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        FileUtils.writeFile(multipartFile,fileName);*/
         return ResponseEntity.status(HttpStatus.OK).body(buildingService.saveOrUpdate(newBuilding.getId(), newBuilding));
     }
 
     @PutMapping
-    public ResponseEntity<BuildingDTO> updateBuilding(@RequestBody BuildingDTO updateBuilding) throws NotFoundException,IOException{
+    public ResponseEntity<BuildingDTO> updateBuilding(@RequestBody BuildingDTO updateBuilding) throws NotFoundException, IOException {
         return ResponseEntity.status(HttpStatus.OK).body(buildingService.saveOrUpdate(updateBuilding.getId(), updateBuilding));
     }
 

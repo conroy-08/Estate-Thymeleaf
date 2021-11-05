@@ -1,8 +1,6 @@
 package com.estate.dto;
 
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private Long staffId;
     private String name;
@@ -37,14 +35,13 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private Integer areaRentTo;
     private Long brokerageFee;
     private String rentArea;
-    private MultipartFile thumbnail;
+    private String thumbnail;
 
-
-    public MultipartFile getThumbnail() {
+    public String getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(MultipartFile thumbnail) {
+    public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 

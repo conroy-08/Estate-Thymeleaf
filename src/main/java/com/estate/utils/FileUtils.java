@@ -1,28 +1,31 @@
 package com.estate.utils;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
+import java.nio.file.StandardCopyOption;
+
 
 public class FileUtils {
-    public static String saveThumbnail(MultipartFile file , String location , HttpServletRequest request) throws IOException {
-        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
-                .replacePath(null)
-                .build()
-                .toUriString();
-        String fileName = UUID.randomUUID().toString() + "." + FilenameUtils.getExtension(file.getOriginalFilename());
-        Path path = Paths.get(location);
-        Files.createDirectories(path);
-        File saveFile = Paths.get(location, fileName).toFile();
-        file.transferTo(saveFile);
-        return fileName;
+
+    public static final String DIR = "/thumbnail";
+
+    public static void writeFile(MultipartFile multipartFile , String fileName  ) throws IOException {
+        Path uploadPath = Paths.get(DIR);
+        if (!Files.exists(uploadPath)){
+            Files.createDirectories(uploadPath);
+        }
+        try{
+            InputStream inputStream = multipartFile.getInputStream();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(inputStream,filePath, StandardCopyOption.REPLACE_EXISTING);
+        }catch (IOException e){
+           throw  new IOException("Could not save upload file" +fileName);
+        }
+
     }
 }

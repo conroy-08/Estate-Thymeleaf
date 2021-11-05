@@ -29,7 +29,7 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-xs-12">
-                    <form  class="form-horizontal" role="form" id="formSubmit"  th:object="${buildingEdit}" >
+                    <form  class="form-horizontal" role="form" id="formSubmit"  th:object="${buildingEdit}"  enctype="multipart/form-data">
                         <div class="form-group">
                             <label th:for="name" class="col-sm-3 control-label no-padding-right">Tên tòa nhà :</label>
                             <div class="col-sm-7">
@@ -203,8 +203,11 @@
                         </div>
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right"  th:for="thumbnail" >Ảnh đại diện</label>
-                            <div class="col-sm-8">
+                            <div class="col-sm-4">
                                 <input style="margin-top: 6px;" type="file" th:field ="*{thumbnail}"  accept="image/png, image/jpeg, image/jpg" placeholder="thumbnail">
+                            </div>
+                            <div class="col-sm-5">
+                                <img id="fileImage" alt="Ảnh đại diện" style="width: 300px;">
                             </div>
 
                         </div>
@@ -239,6 +242,23 @@
 <th:block layout:fragment="script">
 <script>
     console.log("this is my script for edit building")
+
+    /*file*/
+    $('#thumbnail').change(function (){
+        showImageThumbnail(this);
+    })
+    let fileName ;
+    function showImageThumbnail(fileInput){
+        file = fileInput.files[0];
+        reader = new FileReader();
+        fileName = fileInput.files[0].name;
+        reader.onload = function (e){
+            $('#fileImage').attr('src',e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+
+
     /* Add building */
     $('#btnAddBuilding').click(function (e) {
         e.preventDefault();
@@ -252,6 +272,7 @@
                 data[""+v.name+""] = v.value;
             }
         })
+        data['thumbnail'] = fileName;
         data['buildingTypes'] = buildingTypes;
         addBuilding(data);
     })
@@ -309,6 +330,9 @@
             }
         });
     }
+
+
+
 </script>
 </th:block>
 </body>
