@@ -132,6 +132,42 @@
             }
         });
     }
+
+    /* upload files */
+
+    $('#thumbnail').change(function (){
+        showImageThumbnail(this);
+    })
+    let fileName ;
+    function showImageThumbnail(fileInput){
+        let dataFiles = new FormData();
+        let file = fileInput.files[0];
+        let reader = new FileReader();
+        fileName = fileInput.files[0].name;
+        reader.onload = function (e){
+            $('#fileImage').attr('src',e.target.result);
+            dataFiles.append('thumbnail',fileInput.files[0]);
+            uploadFile(dataFiles);
+        };
+        reader.readAsDataURL(file);
+    }
+    function uploadFile(dataFiles){
+        $.ajax({
+            url : '/api/files',
+            type: 'POST',
+            data: dataFiles,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                console.log(result)
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+
 </script>
 <th:block layout:fragment="script"></th:block>
 

@@ -18,14 +18,15 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
+
 public class BuildingService implements IBuildingService {
 
     @Autowired
@@ -39,8 +40,6 @@ public class BuildingService implements IBuildingService {
 
     @Autowired
     private RentAreaRepository areaRepository;
-
-
 
     @Override
     public List<BuildingDTO> findByCondition(BuildingDTO buildingDTO , Pageable pageable) {
@@ -58,8 +57,8 @@ public class BuildingService implements IBuildingService {
 
     @Override
     @Transactional
-    public BuildingDTO saveOrUpdate(Long id, BuildingDTO buildingDTO) throws NotFoundException, IOException {
-        BuildingEntity buildingEntity = null;
+    public BuildingDTO saveOrUpdate(Long id, BuildingDTO buildingDTO) throws NotFoundException {
+        BuildingEntity buildingEntity ;
         if (id != null && id > 0) {
             BuildingEntity oldBuilding = Optional.ofNullable(buildingRepository.findById(id).get())
                     .orElseThrow(() -> new NotFoundException("Building not found !"));
@@ -91,7 +90,8 @@ public class BuildingService implements IBuildingService {
 
     @Override
     public BuildingDTO findById(Long id) {
-        BuildingEntity buildingEntity = buildingRepository.findById(id).get();
+        BuildingEntity buildingEntity = Optional.ofNullable(buildingRepository.findById(id).get())
+                .orElseThrow(() -> new NullPointerException("Building not found !"));
         return buildingConverter.convertToDTO(buildingEntity);
     }
 
@@ -129,7 +129,6 @@ public class BuildingService implements IBuildingService {
         }
 
     }
-
 
     private BuildingSearchBuilder initBuildingBuilder(BuildingDTO model) {
         Long staffId;

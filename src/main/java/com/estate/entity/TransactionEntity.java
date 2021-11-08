@@ -1,5 +1,7 @@
 package com.estate.entity;
 
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -8,6 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name ="transaction")
+
 public class TransactionEntity extends BaseEntity{
 	
 	@Column(name ="code")
@@ -20,7 +23,7 @@ public class TransactionEntity extends BaseEntity{
 	@ManyToOne
 	@JoinColumn(name="customer_id", nullable = false)
 	private CustomerEntity customer;
-	
+
 	public String getCode() {
 		return code;
 	}
@@ -44,7 +47,4 @@ public class TransactionEntity extends BaseEntity{
 	public void setCustomer(CustomerEntity customer) {
 		this.customer = customer;
 	}
-	
-	
-   
 }

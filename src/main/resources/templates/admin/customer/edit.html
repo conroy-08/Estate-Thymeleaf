@@ -75,6 +75,33 @@
                                 </textarea>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">Địa chỉ</label>
+                            <div class="col-sm-7">
+                                <input type="text"  class="form-control" th:field ="*{address}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">Giới tính</label>
+                            <div class="col-sm-7">
+                                <select name="color">
+                                    <option th:each="item : ${T(com.estate.enums.Gender).values()}"
+                                            th:value="${item}" th:text="${item}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label no-padding-right"  th:for="thumbnail" >Ảnh đại diện</label>
+                            <div class="col-sm-4">
+                                <input style="margin-top: 6px;" type="file"  th:field ="*{thumbnail}"  accept="image/png, image/jpeg, image/jpg" placeholder="thumbnail">
+                            </div>
+                            <div class="col-sm-5">
+                                <img th:src="${(customerEdit.thumbnail != null && !#strings.isEmpty(customerEdit.thumbnail)) ? '/img/'+customerEdit.thumbnail : '/img/noimages.jpg'}"
+                                     id="fileImage"   alt="Ảnh đại diện" style="width: 300px; height: 400px;" />
+                            </div>
+
+                        </div>
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right"  th:for="status" >Trạng thái  : </label>
                             <div class="col-sm-7">
@@ -160,15 +187,33 @@
 <script>
     console.log("This is my script for  edit customer   ")
 
-    $('#btnAddCustomer').click(function (e) {
-        e.preventDefault();
+    let oldFileNameCustomer = [[${customerEdit.thumbnail}]];
+
+    /* add or edit */
+    function dataCustomer(){
         let data ={};
         let dataForm = $('#formSubmitCustomer').serializeArray();
         $.each(dataForm , function (i,v){
             data[""+v.name+""] = v.value;
         })
-        addCustomer(data);
+        if(fileName == null ){
+            if (oldFileNameCustomer != null){
+                data['thumbnail'] = oldFileNameCustomer;
+            }else{
+                data['thumbnail'] = null;
+            }
+        }else{
+            data['thumbnail'] = fileName;
+        }
+        return data;
+    }
+
+    $('#btnAddCustomer').click(function (e) {
+        e.preventDefault();
+        let dataAddCustomer = dataCustomer();
+        addCustomer(dataAddCustomer);
     })
+
     function  addCustomer(data){
         $.ajax({
             url : '/api/customer',
@@ -178,25 +223,21 @@
             dataType: 'json',
             success: function (result) {
                 console.log(result)
-                window.location.href = "/customer-list"
+                window.location.href = "/customer-list?page=1&limit=5"
             },
             error: function (error) {
                 console.log(error)
-                window.location.href = "/customer-list"
+                window.location.href = "/customer-list?page=1&limit=5"
             }
         });
     }
 
     $('#btnUpdateCustomer').click(function (e) {
         e.preventDefault();
-        let data ={};
-        let dataForm = $('#formSubmitCustomer').serializeArray();
-        $.each(dataForm , function (i,v){
-            data[""+v.name+""] = v.value;
-        })
         let idOfCustomer = $('#customerId').val();
-        data['id'] = idOfCustomer;
-        updateCustomer(data);
+        let  dataEditCustomer = dataCustomer();
+        dataEditCustomer['id'] = idOfCustomer;
+        updateCustomer(dataEditCustomer);
     })
 
     function  updateCustomer(data){
@@ -208,11 +249,11 @@
             dataType: 'json',
             success: function (result) {
                 console.log(result)
-                window.location.href = "/customer-list"
+                window.location.href = "/customer-list?page=1&limit=5"
             },
             error: function (error) {
                 console.log(error)
-                window.location.href = "/customer-list"
+                window.location.href = "/customer-list?page=1&limit=5"
             }
         });
     }
@@ -238,11 +279,11 @@
             dataType: 'json',
             success: function (result) {
                 console.log(result)
-                window.location.href = "/customer-list"
+                window.location.href = "/customer-list?page=1&limit=5"
             },
             error: function (error) {
                 console.log(error)
-                window.location.href = "/customer-list"
+                window.location.href = "/customer-list?page=1&limit=5"
             }
         })
     }

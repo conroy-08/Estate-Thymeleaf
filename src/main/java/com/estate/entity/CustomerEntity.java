@@ -1,5 +1,9 @@
 package com.estate.entity;
 
+
+
+import com.estate.enums.Gender;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "customer")
+
 public class CustomerEntity extends BaseEntity{
       
 	@Column(name="fullname")
@@ -30,6 +35,15 @@ public class CustomerEntity extends BaseEntity{
 	@Column(name = "status", nullable = false)
 	private String status;
 
+	@Column(name = "thumbnail")
+	private String thumbnail;
+
+	@Column(name = "address")
+	private String address;
+
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE , CascadeType.PERSIST })
 	@JoinTable(name = "assignmentCustomer",
 			joinColumns = @JoinColumn(name = "customer_id", nullable = false),
@@ -39,15 +53,6 @@ public class CustomerEntity extends BaseEntity{
 
 	@OneToMany(mappedBy ="customer" , cascade = {CascadeType.MERGE , CascadeType.PERSIST , CascadeType.REMOVE})
 	private List<TransactionEntity> transaction = new ArrayList<>();
-
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
 	public String getFullName() {
 		return fullName;
@@ -97,12 +102,12 @@ public class CustomerEntity extends BaseEntity{
 		this.company = company;
 	}
 
-	public List<TransactionEntity> getTransaction() {
-		return transaction;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setTransaction(List<TransactionEntity> transaction) {
-		this.transaction = transaction;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public List<UserEntity> getStaffs() {
@@ -111,5 +116,37 @@ public class CustomerEntity extends BaseEntity{
 
 	public void setStaffs(List<UserEntity> staffs) {
 		this.staffs = staffs;
+	}
+
+	public List<TransactionEntity> getTransaction() {
+		return transaction;
+	}
+
+	public void setTransaction(List<TransactionEntity> transaction) {
+		this.transaction = transaction;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 }

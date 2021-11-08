@@ -1,5 +1,8 @@
 package com.estate.dto;
 
+
+import com.estate.enums.Gender;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,30 +15,17 @@ public class UserDTO extends AbstractDTO {
     private String fullName;
     private String password;
     private String email;
-    private String phone;
     private Integer status;
+    private String address;
+    private String phoneNumber;
+    private String thumbnail;
+    private Gender gender;
     private List<RoleDTO> roles = new ArrayList<>();
     private String roleName;
     private String roleCode;
     private Map<String,String> roleDTOs = new HashMap<>();
     private  List<BuildingDTO> buildings = new ArrayList<>();
     private List<CustomerDTO> customers = new ArrayList<>();
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getBuildingId() {
         return buildingId;
@@ -77,6 +67,15 @@ public class UserDTO extends AbstractDTO {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
     public Integer getStatus() {
         return status;
     }
@@ -109,7 +108,6 @@ public class UserDTO extends AbstractDTO {
         this.roleCode = roleCode;
     }
 
-
     public Map<String, String> getRoleDTOs() {
         return roleDTOs;
     }
@@ -132,5 +130,37 @@ public class UserDTO extends AbstractDTO {
 
     public void setCustomers(List<CustomerDTO> customers) {
         this.customers = customers;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

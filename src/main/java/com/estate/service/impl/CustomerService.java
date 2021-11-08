@@ -13,6 +13,7 @@ import com.estate.utils.SecurityUtils;
 import javassist.NotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,9 +35,9 @@ public class CustomerService implements ICustomerService {
 
 
     @Override
-    public List<CustomerDTO> findByCondition(CustomerDTO customerDTO) {
+    public List<CustomerDTO> findByCondition(CustomerDTO customerDTO ,  Pageable pageable) {
         CustomerSearchBuilder builder = initCustomerBuilder(customerDTO);
-        List<CustomerEntity> customerEntities = customerRepository.findByCondition(builder);
+        List<CustomerEntity> customerEntities = customerRepository.findByCondition(builder,pageable);
         List<CustomerDTO> customerDTOS = new ArrayList<>();
         customerEntities.forEach(item -> {
                     CustomerDTO dto = customerConverter.convertToDTO(item);
@@ -93,6 +94,12 @@ public class CustomerService implements ICustomerService {
             throw new NotFoundException("Customer not found !");
         }
         customerRepository.deleteByIdIn(ids);
+    }
+
+    @Override
+    public int count(CustomerDTO customerDTO) {
+        CustomerSearchBuilder builder = initCustomerBuilder(customerDTO);
+        return customerRepository.count(builder).intValue();
     }
 
     private CustomerSearchBuilder initCustomerBuilder(CustomerDTO customerDTO) {

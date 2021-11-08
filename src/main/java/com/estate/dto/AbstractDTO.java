@@ -1,13 +1,15 @@
 package com.estate.dto;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+
 public class AbstractDTO<T> implements Serializable {
 
-    private static final long serialVersionUID = 7213600440729202783L;
 
     private Long id;
     private Long[] ids;
@@ -25,13 +27,6 @@ public class AbstractDTO<T> implements Serializable {
     private Integer totalItem;
     private String searchValue;
 
-    public Long[] getIds() {
-        return ids;
-    }
-
-    public void setIds(Long[] ids) {
-        this.ids = ids;
-    }
 
     public Long getId() {
         return id;
@@ -39,6 +34,14 @@ public class AbstractDTO<T> implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long[] getIds() {
+        return ids;
+    }
+
+    public void setIds(Long[] ids) {
+        this.ids = ids;
     }
 
     public Date getCreatedDate() {
@@ -71,10 +74,6 @@ public class AbstractDTO<T> implements Serializable {
 
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-
-    public int getTotalPages() {
-        return (int) Math.ceil((double) this.getTotalItems() / this.getMaxPageItems());
     }
 
     public int getMaxPageItems() {

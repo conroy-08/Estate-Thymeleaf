@@ -1,9 +1,12 @@
 package com.estate.entity;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+
 
 @Entity
 @Table(name = "building")
@@ -90,203 +93,203 @@ public class BuildingEntity extends BaseEntity {
 	private List<RentAreaEntity> rentAreas = new ArrayList<>();
 
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getStreet() {
-		return street;
-	}
+    public String getStreet() {
+        return street;
+    }
 
-	public void setStreet(String street) {
-		this.street = street;
-	}
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-	public String getWard() {
-		return ward;
-	}
+    public String getWard() {
+        return ward;
+    }
 
-	public void setWard(String ward) {
-		this.ward = ward;
-	}
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
 
-	public Integer getBuildingArea() {
-		return buildingArea;
-	}
+    public Integer getBuildingArea() {
+        return buildingArea;
+    }
 
-	public void setBuildingArea(Integer buildingArea) {
-		this.buildingArea = buildingArea;
-	}
+    public void setBuildingArea(Integer buildingArea) {
+        this.buildingArea = buildingArea;
+    }
 
-	public String getDistrict() {
-		return district;
-	}
+    public String getDistrict() {
+        return district;
+    }
 
-	public void setDistrict(String district) {
-		this.district = district;
-	}
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 
-	public String getStructure() {
-		return structure;
-	}
+    public String getStructure() {
+        return structure;
+    }
 
-	public void setStructure(String structure) {
-		this.structure = structure;
-	}
+    public void setStructure(String structure) {
+        this.structure = structure;
+    }
 
-	public Integer getNumberOfBasement() {
-		return numberOfBasement;
-	}
+    public Integer getNumberOfBasement() {
+        return numberOfBasement;
+    }
 
-	public void setNumberOfBasement(Integer numberOfBasement) {
-		this.numberOfBasement = numberOfBasement;
-	}
+    public void setNumberOfBasement(Integer numberOfBasement) {
+        this.numberOfBasement = numberOfBasement;
+    }
 
-	public String getDirection() {
-		return direction;
-	}
+    public String getDirection() {
+        return direction;
+    }
 
-	public void setDirection(String direction) {
-		this.direction = direction;
-	}
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
-	public String getLevel() {
-		return level;
-	}
+    public String getLevel() {
+        return level;
+    }
 
-	public void setLevel(String level) {
-		this.level = level;
-	}
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
-	public Integer getRentPrice() {
-		return rentPrice;
-	}
+    public Integer getRentPrice() {
+        return rentPrice;
+    }
 
-	public void setRentPrice(Integer rentPrice) {
-		this.rentPrice = rentPrice;
-	}
+    public void setRentPrice(Integer rentPrice) {
+        this.rentPrice = rentPrice;
+    }
 
-	public String getRentPriceDescription() {
-		return rentPriceDescription;
-	}
+    public String getRentPriceDescription() {
+        return rentPriceDescription;
+    }
 
-	public void setRentPriceDescription(String rentPriceDescription) {
-		this.rentPriceDescription = rentPriceDescription;
-	}
+    public void setRentPriceDescription(String rentPriceDescription) {
+        this.rentPriceDescription = rentPriceDescription;
+    }
 
-	public String getServiceFee() {
-		return serviceFee;
-	}
+    public String getServiceFee() {
+        return serviceFee;
+    }
 
-	public void setServiceFee(String serviceFee) {
-		this.serviceFee = serviceFee;
-	}
+    public void setServiceFee(String serviceFee) {
+        this.serviceFee = serviceFee;
+    }
 
-	public String getCarFee() {
-		return carFee;
-	}
+    public String getCarFee() {
+        return carFee;
+    }
 
-	public void setCarFee(String carFee) {
-		this.carFee = carFee;
-	}
+    public void setCarFee(String carFee) {
+        this.carFee = carFee;
+    }
 
-	public String getMotoFee() {
-		return motoFee;
-	}
+    public String getMotoFee() {
+        return motoFee;
+    }
 
-	public void setMotoFee(String motoFee) {
-		this.motoFee = motoFee;
-	}
+    public void setMotoFee(String motoFee) {
+        this.motoFee = motoFee;
+    }
 
-	public String getOvertimeFee() {
-		return overtimeFee;
-	}
+    public String getOvertimeFee() {
+        return overtimeFee;
+    }
 
-	public void setOvertimeFee(String overtimeFee) {
-		this.overtimeFee = overtimeFee;
-	}
+    public void setOvertimeFee(String overtimeFee) {
+        this.overtimeFee = overtimeFee;
+    }
 
-	public String getElectricFee() {
-		return electricFee;
-	}
+    public String getElectricFee() {
+        return electricFee;
+    }
 
-	public void setElectricFee(String electricFee) {
-		this.electricFee = electricFee;
-	}
+    public void setElectricFee(String electricFee) {
+        this.electricFee = electricFee;
+    }
 
-	public String getDeposit() {
-		return deposit;
-	}
+    public String getDeposit() {
+        return deposit;
+    }
 
-	public void setDeposit(String deposit) {
-		this.deposit = deposit;
-	}
+    public void setDeposit(String deposit) {
+        this.deposit = deposit;
+    }
 
-	public String getPayMent() {
-		return payMent;
-	}
+    public String getPayMent() {
+        return payMent;
+    }
 
-	public void setPayMent(String payMent) {
-		this.payMent = payMent;
-	}
+    public void setPayMent(String payMent) {
+        this.payMent = payMent;
+    }
 
-	public String getRentTime() {
-		return rentTime;
-	}
+    public String getRentTime() {
+        return rentTime;
+    }
 
-	public void setRentTime(String rentTime) {
-		this.rentTime = rentTime;
-	}
+    public void setRentTime(String rentTime) {
+        this.rentTime = rentTime;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getThumbnail() {
-		return thumbnail;
-	}
+    public String getThumbnail() {
+        return thumbnail;
+    }
 
-	public void setThumbnail(String thumbnail) {
-		this.thumbnail = thumbnail;
-	}
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
-	public String getManagerName() {
-		return managerName;
-	}
+    public String getManagerName() {
+        return managerName;
+    }
 
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
-	}
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
 
-	public String getManagerPhone() {
-		return managerPhone;
-	}
+    public String getManagerPhone() {
+        return managerPhone;
+    }
 
-	public void setManagerPhone(String managerPhone) {
-		this.managerPhone = managerPhone;
-	}
+    public void setManagerPhone(String managerPhone) {
+        this.managerPhone = managerPhone;
+    }
 
-	public List<UserEntity> getStaffs() {
-		return staffs;
-	}
+    public List<UserEntity> getStaffs() {
+        return staffs;
+    }
 
-	public void setStaffs(List<UserEntity> staffs) {
-		this.staffs = staffs;
-	}
+    public void setStaffs(List<UserEntity> staffs) {
+        this.staffs = staffs;
+    }
 
-	public List<RentAreaEntity> getRentAreas() {
-		return rentAreas;
-	}
+    public List<RentAreaEntity> getRentAreas() {
+        return rentAreas;
+    }
 
-	public void setRentAreas(List<RentAreaEntity> rentAreas) {
-		this.rentAreas = rentAreas;
-	}
+    public void setRentAreas(List<RentAreaEntity> rentAreas) {
+        this.rentAreas = rentAreas;
+    }
 }

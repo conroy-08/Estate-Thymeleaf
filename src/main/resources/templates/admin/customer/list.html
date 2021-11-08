@@ -96,6 +96,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" value="1" id="page" name="page"/>
+                                    <input type="hidden" value="" id="limit" name="limit" th:field="*{limit}"/>
                             </form>
 
 
@@ -167,6 +169,7 @@
 
                                             </tbody>
                                         </table> <!-- table-->
+                                        <ul class="pagination" id="pagination"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -271,12 +274,12 @@
                 contentType: 'application/json',
                 success: function(data) {
                     console.log("success");
-                    window.location.href = "/customer-list"
+                    window.location.href = "/customer-list?page=1&limit=5"
                     alert("success");
                 },
                 error: function() {
                     console.log("fail");
-                    window.location.href = "/customer-list"
+                    window.location.href = "/customer-list?page=1&limit=5"
                     alert("fail");
                 }
             });
@@ -299,13 +302,33 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function (res) {
-                    window.location.href = "/customer-list";
+                    window.location.href = "/customer-list?page=1&limit=5";
                 },
                 error: function (res) {
-                    window.location.href = "/customer-list";
+                    window.location.href = "/customer-list?page=1&limit=5";
                 }
             });
         }
+
+        /* pagination */
+        let totalPages = [[${customerSearch.totalPage}]];
+        let currentPage = [[${customerSearch.page}]];
+        $(function () {
+            window.pagObj = $('#pagination').twbsPagination({
+                totalPages:totalPages,
+                visiblePages: 5,
+                startPage : currentPage,
+                onPageClick: function (event, page) {
+                    if (currentPage != page){
+                        $('#page').val(page);
+                        $('#limit').val(5);
+                        $('#listFormUser').submit();
+                    }
+                    console.info(page + ' (from options)');
+                }
+            })
+        });
+
 </script>
 </th:block>
 

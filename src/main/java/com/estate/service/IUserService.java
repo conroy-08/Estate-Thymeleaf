@@ -21,6 +21,7 @@ public interface IUserService {
     void delete(List<Long> ids) throws NotFoundException;
     UserDTO findUserById(long id) throws NotFoundException;
     UserDTO resetPassword(long id) throws NotFoundException;
+    UserDTO updateProfile(String userName , UserDTO userDTO) throws NotFoundException;
     void updatePassword(long id , PasswordDTO passwordDTO) throws Exception;
 
 }

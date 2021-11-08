@@ -123,7 +123,8 @@
                             </div>
                         </div>
                         <div class="col-sm-5">
-                            <img src='no-image.png' alt="Hình ảnh tòa nhà"/>
+                            <img th:src="${(buildingView.thumbnail != null && !#strings.isEmpty(buildingView.thumbnail)) ? '/img/'+buildingView.thumbnail : '/img/noimages.jpg'}"
+                                 alt="Ảnh đại diện" style="width: 300px; height: 300px;" />
                             <hr>
                             <h6 style="font-family: VnBlack ; font-weight: bold; color: #000000;">Ghi chú </h6>
                             <p>Ghi chú sẽ được thêm vào sau </p>

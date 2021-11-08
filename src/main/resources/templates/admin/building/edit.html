@@ -204,10 +204,11 @@
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right"  th:for="thumbnail" >Ảnh đại diện</label>
                             <div class="col-sm-4">
-                                <input style="margin-top: 6px;" type="file" th:field ="*{thumbnail}"  accept="image/png, image/jpeg, image/jpg" placeholder="thumbnail">
+                                <input style="margin-top: 6px;" type="file"  th:field ="*{thumbnail}" th:value="${buildingEdit.thumbnail}" accept="image/png, image/jpeg, image/jpg" placeholder="thumbnail">
                             </div>
                             <div class="col-sm-5">
-                                <img id="fileImage" alt="Ảnh đại diện" style="width: 300px;">
+                                <img th:src="${(buildingEdit.thumbnail != null && !#strings.isEmpty(buildingEdit.thumbnail)) ? '/img/'+buildingEdit.thumbnail : '/img/noimages.jpg'}"
+                                     id="fileImage"  alt="Ảnh đại diện" style="width: 300px; height: 400px;" />
                             </div>
 
                         </div>
@@ -239,42 +240,41 @@
         </div>
     </div>
 </div>
-<th:block layout:fragment="script">
+<th:block layout:fragment="script" th:inline="javascript">
 <script>
     console.log("this is my script for edit building")
 
-    /*file*/
-    $('#thumbnail').change(function (){
-        showImageThumbnail(this);
-    })
-    let fileName ;
-    function showImageThumbnail(fileInput){
-        file = fileInput.files[0];
-        reader = new FileReader();
-        fileName = fileInput.files[0].name;
-        reader.onload = function (e){
-            $('#fileImage').attr('src',e.target.result);
-        };
-        reader.readAsDataURL(file);
-    }
-
+    let oldFileNameBuilding = [[${buildingEdit.thumbnail}]];
 
     /* Add building */
-    $('#btnAddBuilding').click(function (e) {
-        e.preventDefault();
+    function dataBuilding(){
         let data = {};
         let buildingTypes =[];
-        let formdata = $('#formSubmit').serializeArray();
-        $.each(formdata, function (i,v){
+        let formData = $('#formSubmit').serializeArray();
+        $.each(formData, function (i,v){
             if (v.name == 'buildingTypes'){
                 buildingTypes.push(v.value);
             }else {
                 data[""+v.name+""] = v.value;
             }
         })
-        data['thumbnail'] = fileName;
+        if(fileName == null ){
+            if (oldFileNameBuilding != null){
+                data['thumbnail'] = oldFileNameBuilding;
+            }else{
+                data['thumbnail'] = null;
+            }
+        }else{
+            data['thumbnail'] = fileName;
+        }
         data['buildingTypes'] = buildingTypes;
-        addBuilding(data);
+        return data;
+    }
+
+    $('#btnAddBuilding').click(function (e) {
+        e.preventDefault();
+        let dataAdd = dataBuilding();
+        addBuilding(dataAdd);
     })
     function  addBuilding(data){
         $.ajax({
@@ -297,20 +297,10 @@
     /* update building */
     $('#btnUpdateBuilding').click(function (e) {
         e.preventDefault();
-        let data = {};
-        let buildingTypes =[];
-        let dataForm = $('#formSubmit').serializeArray();
-        $.each(dataForm, function (i,v){
-            if (v.name == 'buildingTypes'){
-                buildingTypes.push(v.value);
-            }else {
-                data[""+v.name+""] = v.value;
-            }
-        })
+        let dataEdit = dataBuilding();
         let idOfBuilding = $('#buildlingId').val();
-        data['buildingTypes'] = buildingTypes;
-        data['id'] = idOfBuilding;
-        updateBuilding(data);
+        dataEdit['id'] = idOfBuilding;
+        updateBuilding(dataEdit);
     })
 
     function  updateBuilding(data){

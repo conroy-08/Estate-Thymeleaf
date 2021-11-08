@@ -5,6 +5,8 @@ import com.estate.service.ICustomerService;
 import com.estate.service.IUserService;
 import com.estate.utils.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,7 +26,10 @@ public class CustomerController {
     @GetMapping("/customer-list")
     public ModelAndView customerList(@ModelAttribute("customerSearch") CustomerDTO customerDTO) {
         ModelAndView mav = new ModelAndView("admin/customer/list");
-        customerDTO.setListResult(customerService.findByCondition(customerDTO));
+        Pageable pageable = PageRequest.of(customerDTO.getPage() - 1, customerDTO.getLimit());
+        customerDTO.setTotalItems(customerService.count(customerDTO));
+        customerDTO.setTotalPage((int) Math.ceil((double) customerDTO.getTotalItems() / customerDTO.getLimit()));
+        customerDTO.setListResult(customerService.findByCondition(customerDTO, pageable));
         mav.addObject("staffs", userService.getStaffs());
         return mav;
     }

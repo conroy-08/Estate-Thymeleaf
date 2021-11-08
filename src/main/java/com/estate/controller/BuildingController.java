@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
-
-
 @Controller(value = "buildingControllerOfAdmin")
 public class BuildingController {
 
@@ -25,12 +23,12 @@ public class BuildingController {
     private IUserService userService;
 
     @RequestMapping(value = "/building-list", method = RequestMethod.GET)
-    public ModelAndView buildingList(@ModelAttribute("modelSearch") BuildingDTO buildingDTO ) {
+    public ModelAndView buildingList(@ModelAttribute("modelSearch") BuildingDTO buildingDTO) {
         ModelAndView mav = new ModelAndView("admin/building/list");
-        Pageable pageable =  PageRequest.of(buildingDTO.getPage()-1,buildingDTO.getLimit());
+        Pageable pageable = PageRequest.of(buildingDTO.getPage() - 1, buildingDTO.getLimit());
         buildingDTO.setTotalItems(buildingService.count(buildingDTO));
         buildingDTO.setTotalPage((int) Math.ceil((double) buildingDTO.getTotalItems() / buildingDTO.getLimit()));
-        buildingDTO.setListResult(buildingService.findByCondition(buildingDTO,pageable));
+        buildingDTO.setListResult(buildingService.findByCondition(buildingDTO, pageable));
         mav.addObject("staffs", userService.getStaffs());
         addObject(mav);
         return mav;
@@ -46,7 +44,7 @@ public class BuildingController {
     }
 
     @RequestMapping(value = "/building-edit-{id}", method = RequestMethod.GET)
-    public ModelAndView buildingEdit(@PathVariable(value = "id") Long id)  {
+    public ModelAndView buildingEdit(@PathVariable(value = "id") Long id) {
         ModelAndView mav = new ModelAndView("admin/building/edit");
         BuildingDTO buildingDTO = buildingService.findById(id);
         mav.addObject("buildingEdit", buildingDTO);
@@ -62,7 +60,8 @@ public class BuildingController {
         addObject(mav);
         return mav;
     }
-    private void addObject(ModelAndView mav){
+
+    private void addObject(ModelAndView mav) {
         mav.addObject("buildingTypes", DataUtils.getBuildingTypes());
         mav.addObject("districts", DataUtils.getDistricts());
     }

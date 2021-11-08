@@ -1,5 +1,8 @@
 package com.estate.entity;
 
+
+import com.estate.enums.Gender;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +10,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
+
 public class UserEntity extends BaseEntity {
 
     @Column(name = "username", nullable = false, unique = true)
@@ -24,6 +28,18 @@ public class UserEntity extends BaseEntity {
     @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "phonenumber")
+    private String phoneNumber;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", nullable = false),
@@ -37,7 +53,6 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany(mappedBy = "staffs", fetch = FetchType.LAZY)
     private List<CustomerEntity> customers = new ArrayList<>();
-
 
     public String getUserName() {
         return userName;
@@ -101,5 +116,37 @@ public class UserEntity extends BaseEntity {
 
     public void setCustomers(List<CustomerEntity> customers) {
         this.customers = customers;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

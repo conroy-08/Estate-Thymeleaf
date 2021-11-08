@@ -179,6 +179,20 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
+    public UserDTO updateProfile(String userName ,UserDTO userDTO) throws NotFoundException {
+        UserEntity oldProfile = Optional.ofNullable(userRepository.findOneByUserName(userName))
+                .orElseThrow(() -> new NotFoundException("User not found !"));
+        oldProfile.setFullName(userDTO.getFullName());
+        oldProfile.setEmail(userDTO.getEmail());
+        oldProfile.setAddress(userDTO.getAddress());
+        oldProfile.setPhoneNumber(userDTO.getPhoneNumber());
+        oldProfile.setGender(userDTO.getGender());
+        oldProfile.setThumbnail(userDTO.getThumbnail());
+        return userConverter.convertToDto(userRepository.save(oldProfile));
+    }
+
+    @Override
+    @Transactional
     public void updatePassword(long id, PasswordDTO passwordDTO) throws Exception {
         UserEntity userEntity = Optional.ofNullable(userRepository.findById(id).get())
                 .orElseThrow(() -> new NotFoundException("User not found !"));

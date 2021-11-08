@@ -48,5 +48,9 @@ public class UserAPI {
             return ResponseEntity.ok(e.getMessage());
         }
     }
+    @PutMapping("/profile/{username}")
+    public ResponseEntity<UserDTO> updateProfileOfUser(@PathVariable("username") String username, @RequestBody UserDTO userDTO) throws NotFoundException {
+        return ResponseEntity.ok(userService.updateProfile(username, userDTO));
+    }
 
 }

@@ -28,30 +28,14 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     private String level;
     private String[] buildingTypes = new String[]{};
     private String address;
+    private String rentArea;
+    private String thumbnail;
     private Integer emptyArea;
     private Integer costRentFrom;
     private Integer costRentTo;
     private Integer areaRentFrom;
     private Integer areaRentTo;
     private Long brokerageFee;
-    private String rentArea;
-    private String thumbnail;
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    public String getDescriptionArea() {
-        return descriptionArea;
-    }
-
-    public void setDescriptionArea(String descriptionArea) {
-        this.descriptionArea = descriptionArea;
-    }
 
     public Long getStaffId() {
         return staffId;
@@ -123,6 +107,14 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
 
     public void setRentPrice(Integer rentPrice) {
         this.rentPrice = rentPrice;
+    }
+
+    public String getDescriptionArea() {
+        return descriptionArea;
+    }
+
+    public void setDescriptionArea(String descriptionArea) {
+        this.descriptionArea = descriptionArea;
     }
 
     public String getRentPriceDescription() {
@@ -253,6 +245,22 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
         this.address = address;
     }
 
+    public String getRentArea() {
+        return rentArea;
+    }
+
+    public void setRentArea(String rentArea) {
+        this.rentArea = rentArea;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     public Integer getEmptyArea() {
         return emptyArea;
     }
@@ -300,15 +308,4 @@ public class BuildingDTO extends AbstractDTO<BuildingDTO> {
     public void setBrokerageFee(Long brokerageFee) {
         this.brokerageFee = brokerageFee;
     }
-
-    public String getRentArea() {
-        return rentArea;
-    }
-
-    public void setRentArea(String rentArea) {
-        this.rentArea = rentArea;
-    }
-
-
-
 }
