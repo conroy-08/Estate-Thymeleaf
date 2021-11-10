@@ -22,8 +22,13 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="ace-icon fa fa-home home-icon"></i>
-                        <a href="">
+                        <a th:href="@{/home}">
                         Trang chủ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            Quản lý tài khoản
                         </a>
                     </li>
                     <li class="active">
@@ -35,7 +40,10 @@
             <div class="page-content">
                 <div class="row">
                     <div class="col-xs-12">
-
+                        <th:block th:if="${message != null}">
+                            <div th:class="'alert alert-block alert-'${alert}" th:text="${message}">
+                            </div>
+                        </th:block>
                         <!-- PAGE CONTENT BEGINS -->
 
                         <div class="row">
@@ -172,12 +180,16 @@
                  type: 'DELETE',
                  contentType: 'application/json',
                  data: JSON.stringify(data),
-                 success: function (res) {
-                     window.location.href = "/user-list?page=1&limit=5";
+                 success: function () {
+                     swal("Deleted!", "The employee has been deleted.", "success").then((result) => {
+                         if(result.value){
+                             location.reload();
+                             window.location.href = "/user-list?page=1&limit=5"
+                         }
+                     });
                  },
-                 error: function (error) {
-                     console.log(error);
-                     window.location.href = "/user-list?page=1&limit=5";
+                 error: function () {
+                     swal("Error", "Could not be deleted! :)", "error");
                  }
              });
          }

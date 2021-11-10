@@ -19,8 +19,13 @@
             <ul class="breadcrumb">
                 <li>
                     <i class="ace-icon fa fa-home home-icon"></i>
+                    <a th:href="@{/home}">
+                        Trang chủ
+                    </a>
+                </li>
+                <li>
                     <a href="">
-                    Trang chủ
+                        Quản lý khách hàng
                     </a>
                 </li>
                 <li class="active">Chỉnh sửa khách hàng</li>
@@ -183,13 +188,12 @@
         </div> <!-- end transactions -->
     </div>
 </div>
-<th:block layout:fragment="script">
+<th:block layout:fragment="script" th:inline="javascript">
 <script>
     console.log("This is my script for  edit customer   ")
 
     let oldFileNameCustomer = [[${customerEdit.thumbnail}]];
 
-    /* add or edit */
     function dataCustomer(){
         let data ={};
         let dataForm = $('#formSubmitCustomer').serializeArray();
@@ -207,12 +211,20 @@
         }
         return data;
     }
+    /* add or edit */
 
-    $('#btnAddCustomer').click(function (e) {
-        e.preventDefault();
-        let dataAddCustomer = dataCustomer();
-        addCustomer(dataAddCustomer);
+
+    $('#btnAddCustomer').click(function () {
+        warningBeforeAddCustomer();
     })
+
+    function warningBeforeAddCustomer(){
+        showAlertBeforeAdd(function (){
+            event.preventDefault();
+            let dataAddCustomer = dataCustomer();
+            addCustomer(dataAddCustomer);
+        })
+    }
 
     function  addCustomer(data){
         $.ajax({
@@ -221,25 +233,34 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             dataType: 'json',
-            success: function (result) {
-                console.log(result)
-                window.location.href = "/customer-list?page=1&limit=5"
+            success: function () {
+                swal("Saved!", "The employee has been saved.", "success").then((result) => {
+                    if(result.value){
+                        location.reload();
+                        window.location.href = "/customer-edit"
+                    }
+                });
             },
-            error: function (error) {
-                console.log(error)
-                window.location.href = "/customer-list?page=1&limit=5"
+            error: function () {
+                swal("Error", "Could not be saved! :)", "error");
             }
         });
     }
 
-    $('#btnUpdateCustomer').click(function (e) {
-        e.preventDefault();
-        let idOfCustomer = $('#customerId').val();
-        let  dataEditCustomer = dataCustomer();
-        dataEditCustomer['id'] = idOfCustomer;
-        updateCustomer(dataEditCustomer);
+    $('#btnUpdateCustomer').click(function () {
+       warningBeforeUpdateCustomer();
     })
 
+
+    function warningBeforeUpdateCustomer(){
+        showAlertBeforeUpdate(function (){
+            event.preventDefault();
+            let idOfCustomer = $('#customerId').val();
+            let  dataEditCustomer = dataCustomer();
+            dataEditCustomer['id'] = idOfCustomer;
+            updateCustomer(dataEditCustomer);
+        })
+    }
     function  updateCustomer(data){
         $.ajax({
             url : '/api/customer',
@@ -247,13 +268,17 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             dataType: 'json',
-            success: function (result) {
-                console.log(result)
-                window.location.href = "/customer-list?page=1&limit=5"
+            success: function (res) {
+                swal("Updated!", "The employee has been updated.", "success").then((result) => {
+                    if(result.value){
+                        location.reload();
+                        window.location.href = "/customer-edit-"+res.id;
+                    }
+                });
             },
-            error: function (error) {
-                console.log(error)
-                window.location.href = "/customer-list?page=1&limit=5"
+            error: function (res) {
+                swal("Error", "Could not be updated! :)", "error");
+                window.location.href = "/customer-edit-"+res.id;
             }
         });
     }

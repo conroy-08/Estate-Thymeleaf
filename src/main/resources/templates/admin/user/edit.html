@@ -20,7 +20,14 @@
             <ul class="breadcrumb">
                 <li>
                     <i class="ace-icon fa fa-home home-icon"></i>
-                    <a href="#">Trang chủ</a>
+                    <a th:href="@{/home}">
+                        Trang chủ
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        Quản lý tài khoản
+                    </a>
                 </li>
                 <li class="active">Chỉnh sửa người dùng</li>
             </ul><!-- /.breadcrumb -->
@@ -28,6 +35,7 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-xs-12">
+
                     <form id="formEdit" class="form-horizontal" th:object="${userEdit}">
                         <div id="profile">
                             <div class="form-group">
@@ -131,11 +139,12 @@
     </div>
 </div> <!-- end content-->
 
-<th:block layout:fragment="script">
+<th:block layout:fragment="script" th:inline="javascript">
 <script>
         console.log("This is my script for edit user")
 
-        let oldFileNameUser = [[${userEdit.thumbnail}]];
+        let oldFileNameUser = [[${userEdit.thumbnail}]] ;
+
 
         function  dataUser(){
             let formData = $("#formEdit").serializeArray();
@@ -156,30 +165,23 @@
         }
 
         /* user */
-        $('#btnAddUsers').click(function (event){
-            event.preventDefault();
-            let dataArray = dataUser();
-            let userName = dataArray['userName'];
-            let roleCode = dataArray['roleCode'];
-            if (userName != '' && roleCode != '') {
-                addUser(dataArray);
-            } else {
-                window.location.href = "/user-edit?message=username_role_require";
-            }
 
+        $('#btnAddUsers').click(function (){
+            warningBeforeAddUser();
         })
-
-        $('#btnUpdateUsers').click(function (e){
-            e.preventDefault();
-            let userId = $('#userId').val();
-            let dataArrayEdit = dataUser();
-            let roleCode = dataArrayEdit['roleCode'];
-            if (roleCode != '') {
-                updateUser(dataArrayEdit, $('#userId').val());
-            } else {
-                window.location.href = "/user-edit-"+userId+"?message=role_require'";
-            }
-        })
+        function warningBeforeAddUser(){
+            showAlertBeforeAdd(function (){
+                event.preventDefault();
+                let dataArray = dataUser();
+                let userName = dataArray['userName'];
+                let roleCode = dataArray['roleCode'];
+                if (userName != '' && roleCode != '') {
+                    addUser(dataArray);
+                } else {
+                    window.location.href = "/user-edit?message=username_role_require";
+                }
+            })
+        }
 
         function addUser(data) {
             $.ajax({
@@ -188,15 +190,36 @@
                 dataType: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
-                success: function (res) {
-                    console.log(res);
-                    window.location.href = "/user-list?page=1&limit=5";
+                success: function () {
+                    swal("Saved!", "The employee has been saved.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/user-edit"
+                        }
+                    });
                 },
-                error: function (res) {
-                    console.log(res);
-                    window.location.href = "/user-list?page=1&limit=5";
+                error: function () {
+                    swal("Error", "Could not be saved! :)", "error");
                 }
             });
+        }
+
+        $('#btnUpdateUsers').click(function (e){
+            e.preventDefault();
+        })
+
+        function warningBeforeUpdateUser(){
+            showAlertBeforeUpdate(function (){
+                event.preventDefault();
+                let userId = $('#userId').val();
+                let dataArrayEdit = dataUser();
+                let roleCode = dataArrayEdit['roleCode'];
+                if (roleCode != '') {
+                    updateUser(dataArrayEdit, $('#userId').val());
+                } else {
+                    window.location.href = "/user-edit-"+userId+"?message=role_require'";
+                }
+            })
         }
 
         function updateUser(data, id) {
@@ -207,12 +230,16 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function (res) {
-                    console.log(res);
-                    window.location.href = "/user-list?page=1&limit=5";
+                    swal("Updated!", "The employee has been updated.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/user-edit-"+res.id;
+                        }
+                    });
                 },
                 error: function (res) {
-                    console.log(res);
-                    window.location.href = "/user-list?page=1&limit=5";
+                    swal("Error", "Could not be updated! :)", "error");
+                    window.location.href = "/user-edit-"+res.id;
                 }
             });
         }
@@ -230,13 +257,16 @@
                 type: 'PUT',
                 dataType: 'json',
                 success: function (res) {
-                    /*$('#loading_image').hide();*/
-                    window.location.href = "/user-edit-"+res.id+"?message=reset_password_success";
-                    alert("success")
+                    swal("Done!", "The employee has been reseted.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/user-edit-"+res.id+"?message=reset_password_success";
+                        }
+                    });
                 },
-                error: function (res) {
+                error: function () {
+                    swal("Error", "Could not be resetted! :)", "error");
                     window.location.href = "/user-edit-"+id+"?message=error_system";
-                    alert("false")
                 }
             })
         }

@@ -19,8 +19,13 @@
             <ul class="breadcrumb">
                 <li>
                     <i class="ace-icon fa fa-home home-icon"></i>
-                    <a href="">
+                    <a th:href="@{/home}">
                     Trang chủ
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        Quản lý tòa nhà
                     </a>
                 </li>
                 <li class="active">Chỉnh sửa người dùng</li>
@@ -29,12 +34,16 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-xs-12">
+                    <div id="message" style="display: none">
+
+                    </div>
                     <form  class="form-horizontal" role="form" id="formSubmit"  th:object="${buildingEdit}"  enctype="multipart/form-data">
                         <div class="form-group">
                             <label th:for="name" class="col-sm-3 control-label no-padding-right">Tên tòa nhà :</label>
                             <div class="col-sm-7">
                                 <input type="text"  class="form-control" th:field ="*{name}" />
                             </div>
+
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" th:for="district"> Quận :</label>
@@ -223,7 +232,7 @@
                                   </div>
 
                                 <div th:if="${buildingEdit.id == null}" >
-                                    <button class="btn btn-info" type="button"  id="btnAddBuilding" >
+                                    <button class="btn btn-info" type="button"  id="btnAddBuilding"  >
                                         <i class="ace-icon fa fa-check bigger-110"></i>
                                         Thêm tòa nhà
                                     </button>
@@ -246,7 +255,6 @@
 
     let oldFileNameBuilding = [[${buildingEdit.thumbnail}]];
 
-    /* Add building */
     function dataBuilding(){
         let data = {};
         let buildingTypes =[];
@@ -271,11 +279,20 @@
         return data;
     }
 
-    $('#btnAddBuilding').click(function (e) {
-        e.preventDefault();
-        let dataAdd = dataBuilding();
-        addBuilding(dataAdd);
+
+    /* Add building */
+    $('#btnAddBuilding').click(function () {
+        warningBeforeAdd();
     })
+
+    function warningBeforeAdd(){
+        showAlertBeforeAdd(function (){
+            event.preventDefault();
+            let dataAdd = dataBuilding();
+            addBuilding(dataAdd);
+        })
+    }
+
     function  addBuilding(data){
         $.ajax({
             url : '/api/building',
@@ -283,25 +300,35 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             dataType: 'json',
-            success: function (result) {
-                console.log(result)
-                window.location.href = "/building-list?page=1&limit=5"
+            success: function () {
+                swal("Saved!", "The employee has been saved.", "success").then((result) => {
+                    if(result.value){
+                        location.reload();
+                        window.location.href = "/building-edit"
+                    }
+                });
             },
-            error: function (error) {
-                console.log(error)
-                window.location.href = "/building-list?page=1&limit=5"
+            error: function () {
+                swal("Error", "Could not be saved! :)", "error");
             }
         });
     }
 
     /* update building */
-    $('#btnUpdateBuilding').click(function (e) {
-        e.preventDefault();
-        let dataEdit = dataBuilding();
-        let idOfBuilding = $('#buildlingId').val();
-        dataEdit['id'] = idOfBuilding;
-        updateBuilding(dataEdit);
+
+    $('#btnUpdateBuilding').click(function () {
+       warningBeforeUpdate();
     })
+
+    function warningBeforeUpdate(){
+        showAlertBeforeUpdate(function (){
+            event.preventDefault();
+            let dataEdit = dataBuilding();
+            let idOfBuilding = $('#buildlingId').val();
+            dataEdit['id'] = idOfBuilding;
+            updateBuilding(dataEdit);
+        })
+    }
 
     function  updateBuilding(data){
         $.ajax({
@@ -310,17 +337,20 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             dataType: 'json',
-            success: function (result) {
-                console.log(result)
-                window.location.href = "/building-list?page=1&limit=5"
+            success: function (res) {
+                swal("Updated!", "The employee has been updated.", "success").then((result) => {
+                    if(result.value){
+                        location.reload();
+                        window.location.href = "/building-edit-"+res.id;
+                    }
+                });
             },
-            error: function (error) {
-                console.log(error)
-                window.location.href = "/building-list?page=1&limit=5"
+            error: function (res) {
+                swal("Error", "Could not be updated! :)", "error");
+                window.location.href = "/building-edit-"+res.id;
             }
         });
     }
-
 
 
 </script>

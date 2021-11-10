@@ -23,13 +23,17 @@
             <ul class="breadcrumb">
                 <li>
                     <i class="ace-icon fa fa-home home-icon"></i>
+                    <a th:href="@{/home}">
+                        Trang chủ
+                    </a>
+                </li>
+                <li>
                     <a href="">
-
-                    Trang chủ
+                        Quản lý khách hàng
                     </a>
                 </li>
                 <li class="active">
-                    Danh sách người dùng
+                    Danh sách khách hàng
                 </li>
             </ul>
             <!-- /.breadcrumb -->
@@ -301,18 +305,26 @@
                 type: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
-                success: function (res) {
-                    window.location.href = "/customer-list?page=1&limit=5";
+                success: function () {
+                    swal("Deleted!", "The employee has been deleted.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/customer-list?page=1&limit=5"
+                        }
+                    });
                 },
-                error: function (res) {
-                    window.location.href = "/customer-list?page=1&limit=5";
+                error: function () {
+                    swal("Error", "Could not be deleted! :)", "error");
                 }
             });
         }
 
         /* pagination */
+
+
         let totalPages = [[${customerSearch.totalPage}]];
         let currentPage = [[${customerSearch.page}]];
+
         $(function () {
             window.pagObj = $('#pagination').twbsPagination({
                 totalPages:totalPages,

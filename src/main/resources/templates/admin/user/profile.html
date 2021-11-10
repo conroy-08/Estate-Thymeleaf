@@ -20,7 +20,9 @@
             <ul class="breadcrumb">
                 <li>
                     <i class="ace-icon fa fa-home home-icon"></i>
-                    <a href="#">Trang chủ</a>
+                    <a th:href="@{/home}">
+                        Trang chủ
+                    </a>
                 </li>
                 <li class="active">Thông tin tài khoản </li>
             </ul><!-- /.breadcrumb -->
@@ -115,26 +117,33 @@
         let oldFileNameUserProfile = [[${userProfile.thumbnail}]];
         /* update profile*/
 
-        $('#btnUpdateProfile').click(function (event){
-            event.preventDefault();
-            let formData = $('#formEditProfile').serializeArray();
-            let dataProfile = {};
-            $.each(formData, function (i, v) {
-                dataProfile["" + v.name + ""] = v.value;
-            });
-            if(fileName == null ){
-                if (oldFileNameUser != null){
-                    dataProfile['thumbnail'] = oldFileNameUser;
-                }else{
-                    dataProfile['thumbnail'] = null;
-                }
-            }else{
-                dataProfile['thumbnail'] = fileName;
-            }
-            if ($('#userId').val() != "") {
-                updateInfo(dataProfile, $('#userName').val());
-            }
+        $('#btnUpdateProfile').click(function (){
+            warningBeforeUpdateUserProfile();
         })
+
+        function warningBeforeUpdateUserProfile(){
+            showAlertBeforeUpdate(function (){
+                event.preventDefault();
+                let formData = $('#formEditProfile').serializeArray();
+                let dataProfile = {};
+                $.each(formData, function (i, v) {
+                    dataProfile["" + v.name + ""] = v.value;
+                });
+                if(fileName == null ){
+                    if (oldFileNameUser != null){
+                        dataProfile['thumbnail'] = oldFileNameUser;
+                    }else{
+                        dataProfile['thumbnail'] = null;
+                    }
+                }else{
+                    dataProfile['thumbnail'] = fileName;
+                }
+                if ($('#userId').val() != "") {
+                    updateInfo(dataProfile, $('#userName').val());
+                }
+            })
+        }
+
         function updateInfo(data, username) {
             $.ajax({
                 url: '/api/user/profile/' + username,
@@ -143,10 +152,15 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function (res) {
-                    window.location.href = "/user-profile-"+res.userName+"?message=update_success";
+                    swal("Updated!", "The employee has been updated.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/user-profile-"+res.userName+"?message=update_success";
+                        }
+                    });
                 },
                 error: function (res) {
-                    console.log(res);
+                    swal("Error", "Could not be updated! :)", "error");
                     window.location.href = "/user-profile-"+username+"?message=error_system";
                 }
             });

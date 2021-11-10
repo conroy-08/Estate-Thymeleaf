@@ -5,7 +5,7 @@ import com.estate.enums.Gender;
 
 import java.util.List;
 
-public class CustomerDTO extends AbstractDTO {
+public class CustomerDTO extends AbstractDTO<CustomerDTO> {
     private String fullName;
     private String phone;
     private String email;

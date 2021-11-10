@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserDTO extends AbstractDTO {
+public class UserDTO extends AbstractDTO<UserDTO> {
     private String buildingId;
     private Long staffId;
     private String userName;

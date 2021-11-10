@@ -18,8 +18,13 @@
             <ul class="breadcrumb">
                 <li>
                     <i class="ace-icon fa fa-home home-icon"></i>
-                    <a href="">
+                    <a th:href="@{/home}">
                     Trang chủ
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        Quản lý tòa nhà
                     </a>
                 </li>
                 <li class="active">
@@ -338,13 +343,11 @@
                 type: 'POST',
                 contentType: 'application/json',
                 success: function(data) {
-                    console.log("success");
-                    window.location.href = "/building-list"
+                    window.location.href = "/building-list?page=1&limit=5"
                     alert("success");
                 },
                 error: function() {
-                    console.log("fail");
-                    window.location.href = "/building-list"
+                    window.location.href = "/building-list?page=1&limit=5"
                     alert("fail");
                 }
             });
@@ -367,11 +370,16 @@
                 type: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
-                success: function (res) {
-                    window.location.href = "/building-list";
+                success: function () {
+                    swal("Deleted!", "The employee has been deleted.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/building-list?page=1&limit=5"
+                        }
+                    });
                 },
-                error: function (res) {
-                    window.location.href = "/building-list";
+                error: function () {
+                    swal("Error", "Could not be deleted! :)", "error");
                 }
             });
         }

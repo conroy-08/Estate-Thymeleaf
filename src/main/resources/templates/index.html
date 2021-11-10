@@ -114,6 +114,7 @@
 <script th:src="@{admin/assets/js/jquery-ui.min.js}"></script>
 
 <script type="text/javascript" >
+
     function showAlertBeforeDelete(callback) {
         swal({
             title: "Xác nhận xóa",
@@ -132,6 +133,39 @@
             }
         });
     }
+
+
+    function showAlertBeforeAdd(callback){
+        swal({
+            title: 'Do you want to save the changes?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+            denyButtonText: `Don't save`,
+        }).then(function (res) {
+            if (res.value) {
+                callback();
+            } else if (res.dismiss == 'cancel') {
+                console.log('cancel');
+            }
+        });
+    }
+    function showAlertBeforeUpdate(callback){
+        swal({
+            title: 'Do you want to update the changes?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+            denyButtonText: `Don't save`,
+        }).then(function (res) {
+            if (res.value) {
+                callback();
+            } else if (res.dismiss == 'cancel') {
+                console.log('cancel');
+            }
+        });
+    }
+
 
     /* upload files */
 

@@ -22,11 +22,10 @@ public class AbstractDTO<T> implements Serializable {
     private List<T> listResult = new ArrayList<>();
     private int totalItems = 0;
     private String tableId = "tableList";
-    private Integer limit;
+    private Integer limit = 5;
     private Integer totalPage;
     private Integer totalItem;
     private String searchValue;
-
 
     public Long getId() {
         return id;
