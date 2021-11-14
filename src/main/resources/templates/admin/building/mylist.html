@@ -1,0 +1,138 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{index.html}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Danh sách tòa nhà ưu tiên</title>
+</head>
+<body>
+<div class="main-content" layout:fragment="content">
+
+    <div class="main-content-inner">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <script type="text/javascript">
+                try {
+                    ace.settings.check('breadcrumbs', 'fixed')
+                } catch (e) {
+                }
+            </script>
+
+            <ul class="breadcrumb">
+                <li>
+                    <i class="ace-icon fa fa-home home-icon"></i>
+                    <a th:href="@{/home}">
+                        Trang chủ
+                    </a>
+                </li>
+                <li class="active">
+                    Danh sách tòa nhà ưu tiên
+                </li>
+            </ul>
+            <!-- /.breadcrumb -->
+        </div>
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <!-- PAGE CONTENT BEGINS -->
+
+                    <div class="table-btn-controls" >
+                        <div class="pull-right tableTools-container" style=" margin-top: 8px;">
+                            <div class="dt-buttons btn-overlap btn-group">
+                                <button id="btnDelete" type="button" style="margin-left: 6px;"  disabled
+                                        class="dt-button buttons-html5 btn btn-white btn-primary btn-bold"  onclick="warningBeforeDelete()" data-toggle="tooltip" title='Xóa bài viết'>
+										<span>
+											<i class="fa fa-trash-o bigger-110 pink"></i>
+										</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>  <!-- delete and create-->
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <table id="buildingList" class="table  table-bordered ">
+                                    <thead>
+                                    <tr style="font-family: VnBlack ; font-weight: bold; color: #000000;">
+                                        <th><input  type="checkbox" id="checkAll"value="#"/></th>
+                                        <th>Ngày </th>
+                                        <th>Tên tòa nhà</th>
+                                        <th>Địa chỉ</th>
+                                        <th>Tên quản lý</th>
+                                        <th>Số điện thoại</th>
+                                        <th>D.T sàn</th>
+                                        <th>D.T trống </th>
+                                        <th>Giá thuê </th>
+                                        <th>Phí dịch vụ</th>
+                                        <th>Phí MG</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="item : ${mylist}" >
+                                        <td> <input type="checkbox" th:id= "'checkbox_' + ${item.id} " th:value="*{item.id}" /></td>
+                                        <td th:text="${item.createdDate}"> </td>
+                                        <td th:text="${item.name}"> </td>
+                                        <td th:text="${item.address}"></td>
+                                        <td th:text="${item.managerName}"></td>
+                                        <td th:text="${item.managerPhone}"></td>
+                                        <td th:text="${item.buildingArea}"></td>
+                                        <td th:text="${item.emptyArea}"></td>
+                                        <td th:text="${item.rentPrice}"></td>
+                                        <td th:text="${item.serviceCost}"></td>
+                                        <td th:text="${item.brokerageFee}"></td>
+                                        <td>
+                                            <a class="btn btn-xs btn-primary " data-toggle="tooltip"
+                                               title="Thông tin tòa nhà "   th:href="@{'/building-view-'+ ${item.id}}" /><i class="fa fa-eye" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    <td>
+                                    </tbody>
+                                </table> <!-- table-->
+                                <ul class="pagination" id="pagination"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<th:block layout:fragment="script">
+    <script>
+        function warningBeforeDelete() {
+            showAlertBeforeDelete(function () {
+                event.preventDefault();
+                let dataArrayOfMyList = $('tbody input[type=checkbox]:checked').map(function () {
+                    return $(this).val();
+                }).get();
+                deleteMyList(dataArrayOfMyList);
+            });
+        }
+        function deleteMyList(data) {
+            $.ajax({
+                url: '/api/mylist',
+                type: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function () {
+                    swal("Deleted!", "The employee has been deleted.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/building-mylist"
+                        }
+                    });
+                },
+                error: function () {
+                    swal("Error", "Could not be deleted! ", "error");
+                }
+            });
+        }
+    </script>
+</th:block>
+</body>
+</html>

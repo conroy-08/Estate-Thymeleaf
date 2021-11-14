@@ -8,7 +8,9 @@ import com.estate.dto.BuildingDTO;
 import com.estate.dto.request.AssignmentRequest;
 import com.estate.entity.BuildingEntity;
 import com.estate.entity.RentAreaEntity;
+import com.estate.entity.UserEntity;
 import com.estate.repository.BuildingRepository;
+import com.estate.repository.MyListRepository;
 import com.estate.repository.RentAreaRepository;
 import com.estate.repository.UserRepository;
 import com.estate.service.IBuildingService;
@@ -23,10 +25,10 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
-
 public class BuildingService implements IBuildingService {
 
     @Autowired
@@ -40,6 +42,9 @@ public class BuildingService implements IBuildingService {
 
     @Autowired
     private RentAreaRepository areaRepository;
+
+    @Autowired
+    private MyListRepository myListRepository;
 
     @Override
     public List<BuildingDTO> findByCondition(BuildingDTO buildingDTO , Pageable pageable) {
@@ -110,6 +115,9 @@ public class BuildingService implements IBuildingService {
             throw new NotFoundException("Building not found !");
         }
         for ( Long id : ids){
+            if (myListRepository.existsMyListEntitiesByBuildingid(id)){
+               myListRepository.deleteMyListEntitiesByBuildingid(id);
+            }
             buildingRepository.deleteById(id);
         }
     }
@@ -119,7 +127,17 @@ public class BuildingService implements IBuildingService {
     public void assignmentBuilding(AssignmentRequest request) throws Exception {
         BuildingEntity buildingEntity = Optional.ofNullable(buildingRepository.findById(request.getId()).get())
                 .orElseThrow(() -> new NotFoundException("Building not found !"));
+        List<Long> oldStaffs = new ArrayList<>();
+        buildingEntity.getStaffs().forEach( i->{
+            oldStaffs.add(i.getId());
+        });
         List<Long> ids = request.getUserIds();
+        List<Long> list = oldStaffs.stream().filter(i->!ids.contains(i)).collect(Collectors.toList());
+        list.forEach( item ->{
+            if (myListRepository.existsMyListEntitiesByBuildingidAndAndUserId(request.getId(), item)){
+                myListRepository.deleteByBuildingidAndUserId(request.getId(), item);
+            }
+        });
         Long count = userRepository.countByIdIn(ids);
         if (count != ids.size()) {
             throw new Exception("Something wrong !");
@@ -152,5 +170,4 @@ public class BuildingService implements IBuildingService {
                 .setManagerPhone(model.getManagerPhone()).setBuildingTypes(model.getBuildingTypes()).build();
         return builder;
     }
-
 }

@@ -54,6 +54,8 @@ public class UserEntity extends BaseEntity {
     @ManyToMany(mappedBy = "staffs", fetch = FetchType.LAZY)
     private List<CustomerEntity> customers = new ArrayList<>();
 
+
+
     public String getUserName() {
         return userName;
     }

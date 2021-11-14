@@ -231,7 +231,9 @@
                                                         <a class="btn btn-xs btn-primary " data-toggle="tooltip"
                                                            title="Thông tin tòa nhà "   th:href="@{'/building-view-'+ ${item.id}}" /><i class="fa fa-eye" aria-hidden="true"></i>
                                                         </a>
-
+                                                        <a class="btn btn-xs btn-primary " data-toggle="tooltip"
+                                                           title="Thêm vào danh sách ưu tiên "  th:onclick="'warningBeforeAddMyList('+ ${item.id}+')'" /><i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </a>
                                                     </td>
                                                 </tr> <!--End tr -->
                                             </tbody>
@@ -380,6 +382,33 @@
                 },
                 error: function () {
                     swal("Error", "Could not be deleted! :)", "error");
+                }
+            });
+        }
+
+
+
+        /* add mylist*/
+        function warningBeforeAddMyList(id){
+            showAlertBeforeAdd(function (){
+                event.preventDefault();
+                addMyList(id);
+            })
+        }
+        function  addMyList(id){
+            $.ajax({
+                url : '/api/mylist/'+id,
+                type: 'POST',
+                success: function () {
+                    swal("Saved!", "The employee has been saved.", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/building-list?page=1&limit=5"
+                        }
+                    });
+                },
+                error: function () {
+                    swal("Error", "Could not be saved! :)", "error");
                 }
             });
         }
