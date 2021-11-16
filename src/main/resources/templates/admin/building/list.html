@@ -163,7 +163,9 @@
                         </form>
                     </div> <!-- widget-box -->
                     <div class="table-btn-controls" >
-                        <div class="pull-right tableTools-container" style=" margin-top: 8px;">
+                       <th:block th:each = "item : ${T(com.estate.utils.SecurityUtils).getPrincipal().getAuthorities()}">
+                           <th:block th:if="${item.getAuthority() == 'ROLE_MANAGER'}">
+                        <div class="pull-right tableTools-container" style=" margin-top: 8px;" >
                             <div class="dt-buttons btn-overlap btn-group">
                                 <a flag="info"
                                    class="dt-button buttons-colvis btn btn-white btn-primary btn-bold" data-toggle="tooltip"
@@ -180,6 +182,8 @@
                                 </button>
                             </div>
                         </div>
+                           </th:block>
+                       </th:block>
                     </div>  <!-- delete and create-->
                     <br/>
                     <!-- buidling list-->
@@ -220,11 +224,14 @@
                                                     <td th:text="${item.brokerageFee}"></td>
 
                                                     <td>
-
+                                                        <th:block th:each = "index : ${T(com.estate.utils.SecurityUtils).getPrincipal().getAuthorities()}">
+                                                            <th:block th:if="${index.getAuthority() == 'ROLE_MANAGER'}">
                                                         <button class="btn btn-xs btn-primary"  data-toggle="tooltip" data-placement="bottom"
                                                                 title="Giao tòa nhà cho nhân viên" th:onclick="'assignmentBuilding('+ ${item.id}+')'" >
                                                             <i class ="ace-icon fa fa-pencil bigger-120"></i>
                                                         </button>
+                                                            </th:block>
+                                                        </th:block>
                                                         <a class="btn btn-xs btn-primary " data-toggle="tooltip"
                                                            title="Cập nhật bài viết"   th:href="@{'/building-edit-'+ ${item.id}}"/><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                         </a>
@@ -328,6 +335,27 @@
             })
         }
 
+
+        /* pagination */
+        let  totalPages = [[${modelSearch.totalPage}]];
+        let currentPage = [[${modelSearch.page}]];
+        $(function () {
+            window.pagObj = $('#pagination').twbsPagination({
+                totalPages: totalPages,
+                visiblePages: 5,
+                startPage : currentPage,
+                onPageClick: function (event, page) {
+                    if (currentPage != page){
+                        $('#page').val(page);
+                        $('#limit').val(5);
+                        $('#listFormBuilding').submit();
+                    }
+                    console.info(page + ' (from options)');
+                }
+            })
+        });
+
+
         /* assignment building */
         $('#btnAssignBuilding').click(function () {
             let dataArray = $('#staffList tbody input[type=checkbox]:checked').map(function () {
@@ -345,11 +373,11 @@
                 type: 'POST',
                 contentType: 'application/json',
                 success: function(data) {
-                    window.location.href = "/building-list?page=1&limit=5"
+                    window.location.href = "/building-list?page="+currentPage+"&limit=5"
                     alert("success");
                 },
                 error: function() {
-                    window.location.href = "/building-list?page=1&limit=5"
+                    window.location.href = "/building-list?page="+currentPage+"&limit=5"
                     alert("fail");
                 }
             });
@@ -376,7 +404,7 @@
                     swal("Deleted!", "The employee has been deleted.", "success").then((result) => {
                         if(result.value){
                             location.reload();
-                            window.location.href = "/building-list?page=1&limit=5"
+                            window.location.href = "/building-list?page="+currentPage+"&limit=5"
                         }
                     });
                 },
@@ -403,7 +431,7 @@
                     swal("Saved!", "The employee has been saved.", "success").then((result) => {
                         if(result.value){
                             location.reload();
-                            window.location.href = "/building-list?page=1&limit=5"
+                            window.location.href = "/building-list?page="+currentPage+"&limit=5"
                         }
                     });
                 },
@@ -413,24 +441,6 @@
             });
         }
 
-        /* pagination */
-        let  totalPages = [[${modelSearch.totalPage}]];
-        let currentPage = [[${modelSearch.page}]];
-        $(function () {
-            window.pagObj = $('#pagination').twbsPagination({
-                totalPages: totalPages,
-                visiblePages: 5,
-                startPage : currentPage,
-                onPageClick: function (event, page) {
-                    if (currentPage != page){
-                        $('#page').val(page);
-                        $('#limit').val(5);
-                        $('#listFormBuilding').submit();
-                    }
-                    console.info(page + ' (from options)');
-                }
-            })
-        });
 
 </script>
 </th:block>

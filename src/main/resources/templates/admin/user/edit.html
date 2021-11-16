@@ -61,31 +61,32 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Tên đầy đủ</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{fullName}" />
+                                    <input type="text"  class="form-control" th:field ="*{fullName}" th:id="fullName"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Email</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{email}" />
+                                    <input type="text"  class="form-control" th:field ="*{email}" th:id="email" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Số điện thoại</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{phoneNumber}" />
+                                    <input type="text"  class="form-control" th:field ="*{phoneNumber}" th:id="phoneNumber"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Địa chỉ</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{address}" />
+                                    <input type="text"  class="form-control" th:field ="*{address}" th:id="address"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Giới tính</label>
                                 <div class="col-sm-7">
                                     <select name="gender" id="gender">
+                                        <option value=""> -- Chọn giới tính -- </option>
                                         <option th:each="item : ${T(com.estate.enums.Gender).values()}"
                                                 th:value="${item}" th:text="${item}"></option>
                                     </select>
@@ -141,11 +142,28 @@
 
 <th:block layout:fragment="script" th:inline="javascript">
 <script>
-        console.log("This is my script for edit user")
+
+        $('#formEdit').validate({
+            rules:{
+                fullName : "required",
+                phoneNumber :"required",
+                email : {
+                    required: true,
+                    email: true
+                },
+                address :"required"
+            },
+            messages: {
+                fullName: "Vui lòng nhập đầy đủ tên của bạn.",
+                phoneNumber: "Vui lòng nhập số điện thoại của bạn.",
+                address: "Vui lòng nhập địa chỉ của bạn.",
+                email: "Vui lòng nhập  địa chỉ email hợp lệ "
+            },
+        })
+
+
 
         let oldFileNameUser = [[${userEdit.thumbnail}]] ;
-
-
         function  dataUser(){
             let formData = $("#formEdit").serializeArray();
             let dataArray = {};
@@ -172,13 +190,15 @@
         function warningBeforeAddUser(){
             showAlertBeforeAdd(function (){
                 event.preventDefault();
-                let dataArray = dataUser();
-                let userName = dataArray['userName'];
-                let roleCode = dataArray['roleCode'];
-                if (userName != '' && roleCode != '') {
-                    addUser(dataArray);
-                } else {
-                    window.location.href = "/user-edit?message=username_role_require";
+                if ($('#formEdit').valid()){
+                    let dataArray = dataUser();
+                    let userName = dataArray['userName'];
+                    let roleCode = dataArray['roleCode'];
+                    if (userName != '' && roleCode != '') {
+                        addUser(dataArray);
+                    } else {
+                        window.location.href = "/user-edit?message=username_role_require";
+                    }
                 }
             })
         }
@@ -191,7 +211,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function () {
-                    swal("Saved!", "The employee has been saved.", "success").then((result) => {
+                    swal("Saved!", "success").then((result) => {
                         if(result.value){
                             location.reload();
                             window.location.href = "/user-edit"
@@ -204,20 +224,22 @@
             });
         }
 
-        $('#btnUpdateUsers').click(function (e){
-            e.preventDefault();
+        $('#btnUpdateUsers').click(function (){
+            warningBeforeUpdateUser();
         })
 
         function warningBeforeUpdateUser(){
             showAlertBeforeUpdate(function (){
                 event.preventDefault();
-                let userId = $('#userId').val();
-                let dataArrayEdit = dataUser();
-                let roleCode = dataArrayEdit['roleCode'];
-                if (roleCode != '') {
-                    updateUser(dataArrayEdit, $('#userId').val());
-                } else {
-                    window.location.href = "/user-edit-"+userId+"?message=role_require'";
+                if ($('#formEdit').valid()){
+                    let userId = $('#userId').val();
+                    let dataArrayEdit = dataUser();
+                    let roleCode = dataArrayEdit['roleCode'];
+                    if (roleCode != '') {
+                        updateUser(dataArrayEdit, $('#userId').val());
+                    } else {
+                        window.location.href = "/user-edit-"+userId+"?message=role_require'";
+                    }
                 }
             })
         }
@@ -230,7 +252,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function (res) {
-                    swal("Updated!", "The employee has been updated.", "success").then((result) => {
+                    swal("Updated!", "success").then((result) => {
                         if(result.value){
                             location.reload();
                             window.location.href = "/user-edit-"+res.id;
@@ -257,7 +279,7 @@
                 type: 'PUT',
                 dataType: 'json',
                 success: function (res) {
-                    swal("Done!", "The employee has been reseted.", "success").then((result) => {
+                    swal("Done!", "success").then((result) => {
                         if(result.value){
                             location.reload();
                             window.location.href = "/user-edit-"+res.id+"?message=reset_password_success";
@@ -265,11 +287,12 @@
                     });
                 },
                 error: function () {
-                    swal("Error", "Could not be resetted! :)", "error");
+                    swal("Error", "Could not be reseted! :)", "error");
                     window.location.href = "/user-edit-"+id+"?message=error_system";
                 }
             })
         }
+
 
 </script>
 </th:block>

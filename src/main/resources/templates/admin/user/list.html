@@ -90,9 +90,10 @@
                                         <input type="hidden" value="" id="limit" name="limit" th:field="*{limit}"/>
                                     </form>
                                 </div>
-
+                                <br>
                                 <div class="table-btn-controls">
-                                    <div class="pull-right tableTools-container">
+                                    <th:block th:each = "item : ${T(com.estate.utils.SecurityUtils).getPrincipal().getAuthorities()}">
+                                        <th:block th:if="${item.getAuthority() == 'ROLE_MANAGER'}">                                    <div class="pull-right tableTools-container">
                                         <div class="dt-buttons btn-overlap btn-group">
                                             <a flag="info"
                                                class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
@@ -113,6 +114,8 @@
                                             </button>
                                         </div>
                                     </div>
+                                        </th:block>
+                                    </th:block>
                                 </div>
                             </div>
                         </div>
@@ -136,12 +139,20 @@
                                             <td th:text="${item.userName}"> </td>
                                             <td th:text="${item.fullName}"> </td>
                                             <td>
+                                                <th:block th:each = "index : ${T(com.estate.utils.SecurityUtils).getPrincipal().getAuthorities()}">
+                                                    <th:block th:if="${index.getAuthority() == 'ROLE_MANAGER'}">
                                                 <a class="btn btn-sm btn-primary btn-edit" data-toggle="tooltip" th:if="${item.roleCode != 'MANAGER'}"
                                                    title="Cập nhật người dùng"
                                                    th:href="@{'/user-edit-'+ ${item.id}}">
                                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                 </a>
                                                 <p th:if="${item.roleCode == 'MANAGER'}" >Không đươc thao tác</p>
+                                                    </th:block>
+
+                                                    <th:block th:if="${index.getAuthority() != 'ROLE_MANAGER'}">
+                                                        <p>Không đươc thao tác</p>
+                                                    </th:block>
+                                                </th:block>
                                             </td>
                                         </tr>
                                         </tbody>

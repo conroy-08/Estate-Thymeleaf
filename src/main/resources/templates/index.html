@@ -47,6 +47,9 @@
         .form-group {
             margin-bottom: 0px;
         }
+        label.error {
+            color:#ff0500;
+        }
     </style>
 </head>
 <body class="no-skin">
@@ -137,11 +140,11 @@
 
     function showAlertBeforeAdd(callback){
         swal({
-            title: 'Do you want to save the changes?',
+            title: 'Xác nhận lưu',
             showDenyButton: true,
             showCancelButton: true,
-            confirmButtonText: 'Save',
-            denyButtonText: `Don't save`,
+            confirmButtonText: 'Xác nhận',
+            denyButtonText: `Hủy bỏ `,
         }).then(function (res) {
             if (res.value) {
                 callback();
@@ -152,11 +155,11 @@
     }
     function showAlertBeforeUpdate(callback){
         swal({
-            title: 'Do you want to update the changes?',
+            title: 'Xác nhận chỉnh sửa',
             showDenyButton: true,
             showCancelButton: true,
-            confirmButtonText: 'Save',
-            denyButtonText: `Don't save`,
+            confirmButtonText: 'Xác nhận',
+            denyButtonText: `Hủy bỏ`,
         }).then(function (res) {
             if (res.value) {
                 callback();

@@ -106,6 +106,8 @@
 
 
                             <div class="table-btn-controls">
+                                <th:block th:each = "item : ${T(com.estate.utils.SecurityUtils).getPrincipal().getAuthorities()}">
+                                    <th:block th:if="${item.getAuthority() == 'ROLE_MANAGER'}">
                                 <div class="pull-right tableTools-container" style="margin-top: 8px;" >
                                     <div class="dt-buttons btn-overlap btn-group">
                                         <a flag="info"
@@ -125,6 +127,8 @@
                                         </button>
                                     </div>
                                 </div>
+                                    </th:block>
+                                </th:block>
                             </div>
                         </div>
                     </div>
@@ -161,10 +165,14 @@
                                                     <td th:text="${item.createdDate}"></td>
                                                     <td th:text="${item.status}"></td>
                                                     <td>
+                                                        <th:block th:each = "index : ${T(com.estate.utils.SecurityUtils).getPrincipal().getAuthorities()}">
+                                                            <th:block th:if="${index.getAuthority() == 'ROLE_MANAGER'}">
                                                         <button class="btn btn-xs btn-primary"  data-toggle="tooltip" data-placement="bottom"
                                                                 title="Giao tòa nhà cho nhân viên" th:onclick="'assignmentCustomer('+ ${item.id}+')'">
                                                             <i class ="ace-icon fa fa-pencil bigger-120"></i>
                                                         </button>
+                                                            </th:block>
+                                                        </th:block>
                                                         <a class="btn btn-xs btn-primary " data-toggle="tooltip"
                                                            title="Cập nhật bài viết"   th:href="@{'/customer-edit-'+ ${item.id}}" /><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                         </a>

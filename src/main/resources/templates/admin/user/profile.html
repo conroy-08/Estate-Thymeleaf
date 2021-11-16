@@ -110,7 +110,7 @@
     </div>
 </div> <!-- end content-->
 
-<th:block layout:fragment="script">
+<th:block layout:fragment="script" th:inline="javascript">
     <script>
         console.log("This is my script for profile user")
 
@@ -152,7 +152,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(data),
                 success: function (res) {
-                    swal("Updated!", "The employee has been updated.", "success").then((result) => {
+                    swal("Updated!", "success").then((result) => {
                         if(result.value){
                             location.reload();
                             window.location.href = "/user-profile-"+res.userName+"?message=update_success";

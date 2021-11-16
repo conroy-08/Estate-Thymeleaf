@@ -43,33 +43,33 @@
                         <div class="form-group">
                             <label th:for="fullName" class="col-sm-3 control-label no-padding-right"> Tên đầy đủ : </label>
                             <div class="col-sm-7">
-                                <input type="text"  class="form-control" th:field ="*{fullName}" />
+                                <input type="text"  class="form-control" th:field ="*{fullName}"  th:id="fullName"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right" th:for="phone" >Số điện thoại :</label>
                             <div class="col-sm-7">
-                                <input type="text"  class="form-control" th:field ="*{phone}" />
+                                <input type="text"  class="form-control" th:field ="*{phone}" th:id="phone"/>
 
                             </div>
                         </div>
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right"  th:for="email" >Email : </label>
                             <div class="col-sm-7">
-                                <input type="text"  class="form-control" th:field ="*{email}" />
+                                <input type="text"  class="form-control" th:field ="*{email}" th:id="email" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right"  th:for="company" >Tên công ty : </label>
                             <div class="col-sm-7">
-                                <input type="text"  class="form-control" th:field ="*{company}" />
+                                <input type="text"  class="form-control" th:field ="*{company}"  th:id="company"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right"  th:for="demand" >Nhu cầu  : </label>
                             <div class="col-sm-7">
-                                <input type="text"  class="form-control" th:field ="*{demand}" />
+                                <input type="text"  class="form-control" th:field ="*{demand}" th:id="demand"/>
                             </div>
                         </div>
 
@@ -84,13 +84,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">Địa chỉ</label>
                             <div class="col-sm-7">
-                                <input type="text"  class="form-control" th:field ="*{address}" />
+                                <input type="text"  class="form-control" th:field ="*{address}" th:id="address"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">Giới tính</label>
                             <div class="col-sm-7">
                                 <select name="color">
+                                    <option value=""> -- Chọn giới tính -- </option>
                                     <option th:each="item : ${T(com.estate.enums.Gender).values()}"
                                             th:value="${item}" th:text="${item}"></option>
                                 </select>
@@ -110,7 +111,7 @@
                         <div class="form-group">
                             <label  class="col-sm-3 control-label no-padding-right"  th:for="status" >Trạng thái  : </label>
                             <div class="col-sm-7">
-                                <input type="text"  class="form-control" th:field ="*{status}" />
+                                <input type="text"  class="form-control" th:field ="*{status}" th:id="status"/>
                             </div>
                         </div>
                         <input type="hidden"  id="customerId" th:field ="*{id}" th:value="${id}"/>
@@ -190,10 +191,34 @@
 </div>
 <th:block layout:fragment="script" th:inline="javascript">
 <script>
-    console.log("This is my script for  edit customer   ")
+
+   $('#formSubmitCustomer').validate({
+          rules:{
+              fullName : "required",
+              phone :"required",
+              email : {
+                  required: true,
+                  email: true
+              },
+              company : "required",
+              demand :"required",
+              address :"required",
+              status :"required"
+          },
+         messages: {
+
+             company: "Vui lòng nhập công ty của bạn.",
+             demand: "Vui lòng nhập yêu cầu của bạn.",
+             status :"Vui lòng nhập trạng thái xử lý.",
+             fullName: "Vui lòng nhập đầy đủ tên của bạn.",
+             phone: "Vui lòng nhập số điện thoại của bạn.",
+             address: "Vui lòng nhập địa chỉ của bạn.",
+             email: "Vui lòng nhập  địa chỉ email hợp lệ "
+       },
+   })
+
 
     let oldFileNameCustomer = [[${customerEdit.thumbnail}]];
-
     function dataCustomer(){
         let data ={};
         let dataForm = $('#formSubmitCustomer').serializeArray();
@@ -221,8 +246,10 @@
     function warningBeforeAddCustomer(){
         showAlertBeforeAdd(function (){
             event.preventDefault();
-            let dataAddCustomer = dataCustomer();
-            addCustomer(dataAddCustomer);
+            if ($('#formSubmitCustomer').valid()){
+                let dataAddCustomer = dataCustomer();
+                addCustomer(dataAddCustomer);
+            }
         })
     }
 
@@ -234,7 +261,7 @@
             data: JSON.stringify(data),
             dataType: 'json',
             success: function () {
-                swal("Saved!", "The employee has been saved.", "success").then((result) => {
+                swal("Saved!", "success").then((result) => {
                     if(result.value){
                         location.reload();
                         window.location.href = "/customer-edit"
@@ -255,10 +282,13 @@
     function warningBeforeUpdateCustomer(){
         showAlertBeforeUpdate(function (){
             event.preventDefault();
-            let idOfCustomer = $('#customerId').val();
-            let  dataEditCustomer = dataCustomer();
-            dataEditCustomer['id'] = idOfCustomer;
-            updateCustomer(dataEditCustomer);
+            if ($('#formSubmitCustomer').valid()){
+                let idOfCustomer = $('#customerId').val();
+                let  dataEditCustomer = dataCustomer();
+                dataEditCustomer['id'] = idOfCustomer;
+                updateCustomer(dataEditCustomer);
+            }
+
         })
     }
     function  updateCustomer(data){
@@ -269,7 +299,7 @@
             data: JSON.stringify(data),
             dataType: 'json',
             success: function (res) {
-                swal("Updated!", "The employee has been updated.", "success").then((result) => {
+                swal("Updated!", "success").then((result) => {
                     if(result.value){
                         location.reload();
                         window.location.href = "/customer-edit-"+res.id;
