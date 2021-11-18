@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
      Page<UserEntity> findByUserNameContainingIgnoreCaseOrFullNameContainingIgnoreCaseAndStatusNot(String userName, String fullName, int status,
@@ -18,5 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
     List<UserEntity> findByStatusAndRoles_Code(Integer status , String roleCode);
     boolean existsByIdAndBuildingsId(Long staffId , Long buildingId);
     boolean existsByIdAndCustomersId(Long staffId , Long customerId);
+    Optional<UserEntity> findUserEntitiesByEmail(String email);
     long countByIdIn(List<Long> ids);
 }

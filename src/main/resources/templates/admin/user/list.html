@@ -40,10 +40,6 @@
             <div class="page-content">
                 <div class="row">
                     <div class="col-xs-12">
-                        <th:block th:if="${message != null}">
-                            <div th:class="'alert alert-block alert-'${alert}" th:text="${message}">
-                            </div>
-                        </th:block>
                         <!-- PAGE CONTENT BEGINS -->
 
                         <div class="row">
@@ -99,7 +95,7 @@
                                                class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
                                                data-toggle="tooltip"
                                                title="Thêm người dùng"
-                                               th:href="@{/user-edit}">
+                                               th:href="@{/user-edit}" style="margin-right: 8px;">
                                             <span>
 																<i class="fa fa-plus-circle bigger-110 purple"></i>
 															</span>

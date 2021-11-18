@@ -3,6 +3,8 @@ package com.estate.dto;
 
 import com.estate.enums.Gender;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,20 +13,37 @@ import java.util.Map;
 public class UserDTO extends AbstractDTO<UserDTO> {
     private String buildingId;
     private Long staffId;
+
+    @NotBlank(message = "Vui lòng nhập tên đăng nhập . ")
     private String userName;
+
+    @NotBlank(message = "Vui lòng nhập họ tên . ")
     private String fullName;
+
     private String password;
+
+    @NotBlank(message = "")
+    @Email(message = "")
     private String email;
+
     private Integer status;
+
+    @NotBlank(message = "Vui lòng nhập địa chỉ .")
     private String address;
+
+    @NotBlank(message = "Vui lòng nhập số điện thoại.")
     private String phoneNumber;
+
     private String thumbnail;
+
     private Gender gender;
+
+
     private List<RoleDTO> roles = new ArrayList<>();
     private String roleName;
     private String roleCode;
-    private Map<String,String> roleDTOs = new HashMap<>();
-    private  List<BuildingDTO> buildings = new ArrayList<>();
+    private Map<String, String> roleDTOs = new HashMap<>();
+    private List<BuildingDTO> buildings = new ArrayList<>();
     private List<CustomerDTO> customers = new ArrayList<>();
 
     public String getBuildingId() {

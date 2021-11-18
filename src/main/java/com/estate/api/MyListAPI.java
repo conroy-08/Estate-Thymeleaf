@@ -13,16 +13,21 @@ import java.util.List;
 @RequestMapping("/api/mylist")
 public class MyListAPI {
 
+    private final IMyListService myListService;
+
     @Autowired
-    private IMyListService myListService;
+    public MyListAPI(IMyListService myListService) {
+        this.myListService = myListService;
+    }
+
 
     @PostMapping(value = "/{id}")
-    public ResponseEntity<MyListDTO> saveMyList(@PathVariable("id") Long buildingId){
-        return ResponseEntity.status(HttpStatus.OK).body( myListService.save(buildingId));
+    public ResponseEntity<MyListDTO> saveMyList(@PathVariable("id") Long buildingId) {
+        return ResponseEntity.status(HttpStatus.OK).body(myListService.save(buildingId));
     }
 
     @DeleteMapping
-    public void deleteBuildings(@RequestBody List<Long> ids)  {
+    public void deleteBuildings(@RequestBody List<Long> ids) {
         myListService.delete(ids);
     }
 

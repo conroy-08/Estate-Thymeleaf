@@ -12,6 +12,8 @@ import com.estate.repository.UserRepository;
 import com.estate.service.IUserService;
 import javassist.NotFoundException;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,8 @@ import java.util.stream.Stream;
 
 @Service
 public class UserService implements IUserService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -117,9 +121,10 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
-    public UserDTO save(UserDTO newUser) throws NotFoundException {
+    public UserDTO save(UserDTO newUser) throws Exception {
         RoleEntity role = Optional.ofNullable(roleRepository.findOneByCode(newUser.getRoleCode()))
                 .orElseThrow(() -> new NotFoundException("Role not found !"));
+
         UserEntity entity = userConverter.convertToEntity(newUser);
         entity.setRoles(Stream.of(role).collect(Collectors.toList()));
         entity.setStatus(1);
@@ -132,6 +137,7 @@ public class UserService implements IUserService {
     public UserDTO update(Long userId , UserDTO updateUser) throws NotFoundException {
         RoleEntity role =  Optional.ofNullable(roleRepository.findOneByCode(updateUser.getRoleCode()))
                 .orElseThrow(() -> new NotFoundException("Role not found !"));
+
         UserEntity oldUser = userRepository.findById(userId).get();
         UserEntity userEntity = userConverter.convertToEntity(updateUser);
         userEntity.setUserName(oldUser.getUserName());
@@ -193,15 +199,19 @@ public class UserService implements IUserService {
 
     @Override
     @Transactional
-    public void updatePassword(long id, PasswordDTO passwordDTO) throws Exception {
+    public void updatePassword(Long id, PasswordDTO passwordDTO) throws Exception {
         UserEntity userEntity = Optional.ofNullable(userRepository.findById(id).get())
                 .orElseThrow(() -> new NotFoundException("User not found !"));
-        if (passwordEncoder.matches(passwordDTO.getOldPassword(),userEntity.getPassword())
-           && passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword())){
+        if (passwordEncoder.matches(passwordDTO.getOldPassword(),userEntity.getPassword()) && passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword())){
             userEntity.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
             userRepository.save(userEntity);
         }else{
-            throw new Exception(SystemConstant.CHANGE_PASSWORD_FAIL);
+           LOGGER.error("Change password fail !");
         }
+    }
+
+    @Override
+    public boolean userExists(String email) {
+        return  userRepository.findUserEntitiesByEmail(email).isPresent();
     }
 }

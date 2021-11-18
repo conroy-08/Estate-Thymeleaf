@@ -18,12 +18,15 @@ import java.util.List;
 @RequestMapping("/api/building")
 public class BuildingAPI {
 
-    @Autowired
-    private IBuildingService buildingService;
 
+    private final IBuildingService buildingService;
+    private final IUserService userService;
 
     @Autowired
-    private IUserService userService;
+    public BuildingAPI(IBuildingService buildingService, IUserService userService) {
+        this.buildingService = buildingService;
+        this.userService = userService;
+    }
 
     @GetMapping("/{buildingId}/staffs")
     public ResponseEntity<ResponseDTO> loadStaff(@PathVariable("buildingId") Long buildingId) {

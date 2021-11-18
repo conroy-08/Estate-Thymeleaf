@@ -90,7 +90,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">Giới tính</label>
                             <div class="col-sm-7">
-                                <select name="color">
+                                <select  th:id="gender" >
                                     <option value=""> -- Chọn giới tính -- </option>
                                     <option th:each="item : ${T(com.estate.enums.Gender).values()}"
                                             th:value="${item}" th:text="${item}"></option>
@@ -152,7 +152,7 @@
                     <div class="col-cs-9">
                         <button style="float: right;margin-right: 10px;"
                                 class="dt-button buttons-colvis btn btn-white btn-primary btn-bold btnAddTransaction"
-                                data-toggle="tooltip"  title='Thêm hành động' th:id="${item.key}">
+                                data-toggle="tooltip"  title='Thêm hành động' th:id="${item.key}" >
                             <span><i class="fa fa-plus-circle sbigger-110 purple"></i></span>
                         </button>
                     </div>
@@ -203,17 +203,18 @@
               company : "required",
               demand :"required",
               address :"required",
-              status :"required"
+              status :"required",
+              gender :"required"
           },
          messages: {
-
              company: "Vui lòng nhập công ty của bạn.",
              demand: "Vui lòng nhập yêu cầu của bạn.",
              status :"Vui lòng nhập trạng thái xử lý.",
              fullName: "Vui lòng nhập đầy đủ tên của bạn.",
              phone: "Vui lòng nhập số điện thoại của bạn.",
              address: "Vui lòng nhập địa chỉ của bạn.",
-             email: "Vui lòng nhập  địa chỉ email hợp lệ "
+             email: "Vui lòng nhập  địa chỉ email hợp lệ ",
+             gender :"Vui lòng lựa chọn giới tính của bạn."
        },
    })
 
@@ -269,7 +270,7 @@
                 });
             },
             error: function () {
-                swal("Error", "Could not be saved! :)", "error");
+                swal("Error", "Could not be saved! ", "error");
             }
         });
     }
@@ -314,31 +315,45 @@
     }
 
     /* transaction */
-    $('.btnAddTransaction').click(function (e) {
+
+
+
+
+    $('.btnAddTransaction').click(function () {
         let idNoteForm = 'id_'+this.id;
-        let note = document.getElementById(idNoteForm).value;
         let code = this.id;
-        let customerId = $('#customerId').val();
-        let data ={};
-        data['note'] = note;
-        data['code'] = code;
-        data['customerId'] = customerId;
-        addTransaction(data);
+        showAlertBeforeAdd(function (){
+            event.preventDefault();
+            let note = document.getElementById(idNoteForm).value;
+            let customerId = $('#customerId').val();
+            let data ={};
+            data['note'] = note;
+            data['code'] = code;
+            data['customerId'] = customerId;
+            addTransaction(customerId,data);
+        })
     })
-    function  addTransaction(data){
+
+
+
+
+    function  addTransaction(id,data){
         $.ajax({
             url : '/api/customer/transaction',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
-            dataType: 'json',
-            success: function (result) {
-                console.log(result)
-                window.location.href = "/customer-list?page=1&limit=5"
+            success: function () {
+                swal("Updated!", "success").then((result) => {
+                    if(result.value){
+                        location.reload();
+                        window.location.href = "/customer-edit-"+id;
+                    }
+                });
             },
-            error: function (error) {
-                console.log(error)
-                window.location.href = "/customer-list?page=1&limit=5"
+            error: function () {
+                swal("Error", "Could not be updated! :)", "error");
+                window.location.href = "/customer-edit-"+id;
             }
         })
     }

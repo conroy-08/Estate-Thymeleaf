@@ -16,12 +16,12 @@ public interface IUserService {
     List<StaffReponseDTO> findAllStaff(Long buildingId, Long customerId);
     List<UserDTO> getUsers(String searchValue ,  Pageable pageable);
     int getTotalItems(String searchValue);
-    UserDTO save(UserDTO newUser) throws NotFoundException;
+    UserDTO save(UserDTO newUser) throws Exception;
     UserDTO update(Long userId , UserDTO updateUser) throws NotFoundException;
     void delete(List<Long> ids) throws NotFoundException;
     UserDTO findUserById(long id) throws NotFoundException;
     UserDTO resetPassword(long id) throws NotFoundException;
     UserDTO updateProfile(String userName , UserDTO userDTO) throws NotFoundException;
-    void updatePassword(long id , PasswordDTO passwordDTO) throws Exception;
-
+    void updatePassword(Long id , PasswordDTO passwordDTO) throws Exception;
+    boolean userExists(String email);
 }

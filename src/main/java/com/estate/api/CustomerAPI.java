@@ -20,14 +20,16 @@ import java.util.List;
 @RequestMapping("/api/customer")
 public class CustomerAPI {
 
-    @Autowired
-    private ICustomerService customerService;
+    private final ICustomerService customerService;
+    private final ITransactionService transactionService;
+    private final IUserService userService;
 
     @Autowired
-    private ITransactionService transactionService;
-
-    @Autowired
-    private IUserService userService;
+    public CustomerAPI(ICustomerService customerService, ITransactionService transactionService, IUserService userService) {
+        this.customerService = customerService;
+        this.transactionService = transactionService;
+        this.userService = userService;
+    }
 
     @GetMapping("/{customerId}/staffs")
     public ResponseEntity<ResponseDTO> loadStaff(@PathVariable("customerId") Long customerId) {

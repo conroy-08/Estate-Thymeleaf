@@ -1,7 +1,6 @@
 <!DOCTYPE html >
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{index.html}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -41,7 +40,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Vai trò</label>
                                 <div class="col-sm-7">
-                                    <select th:field="*{roleCode}">
+                                    <select th:field="*{roleCode}" th:id="roleCode">
                                         <option value=""> -- Chọn vai trò -- </option>
                                         <option th:each="entry : ${Role.entrySet()}"
                                                 th:value="${entry.key}"
@@ -54,38 +53,42 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Tên đăng nhập</label>
                                 <div class="col-sm-7">
-                                    <input type="text" id="userName" class="form-control" th:disabled="${userEdit.id != null}"  th:value="*{userName}" th:field ="*{userName}"/>
+                                    <input type="text" th:id="userName" class="form-control" th:errorClass="is-invalid" th:disabled="${userEdit.id != null}"  th:value="*{userName}" th:field ="*{userName}" />
                                 </div>
                             </div>
                             <div class="space-4"></div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Tên đầy đủ</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{fullName}" th:id="fullName"/>
+                                    <input type="text"  class="form-control" th:field ="*{fullName}" th:id="fullName" th:errorClass="is-invalid"/>
                                 </div>
+
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Email</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{email}" th:id="email" />
+                                    <input type="text"  class="form-control" th:field ="*{email}" th:id="email" th:errorClass="is-invalid"/>
                                 </div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Số điện thoại</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{phoneNumber}" th:id="phoneNumber"/>
+                                    <input type="text"  class="form-control" th:field ="*{phoneNumber}" th:id="phoneNumber" th:errorClass="is-invalid"/>
                                 </div>
+
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Địa chỉ</label>
                                 <div class="col-sm-7">
-                                    <input type="text"  class="form-control" th:field ="*{address}" th:id="address"/>
+                                    <input type="text"  class="form-control" th:field ="*{address}" th:id="address" th:errorClass="is-invalid"/>
                                 </div>
+
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right">Giới tính</label>
                                 <div class="col-sm-7">
-                                    <select name="gender" id="gender">
+                                    <select name="gender" th:id="gender">
                                         <option value=""> -- Chọn giới tính -- </option>
                                         <option th:each="item : ${T(com.estate.enums.Gender).values()}"
                                                 th:value="${item}" th:text="${item}"></option>
@@ -145,19 +148,25 @@
 
         $('#formEdit').validate({
             rules:{
+                userName : "required",
                 fullName : "required",
                 phoneNumber :"required",
                 email : {
                     required: true,
                     email: true
                 },
-                address :"required"
+                address :"required",
+                roleCode :"required",
+                gender :"required"
             },
             messages: {
+                userName :"Vui lòng nhập đầy đủ tên đăng nhập của bạn.",
                 fullName: "Vui lòng nhập đầy đủ tên của bạn.",
                 phoneNumber: "Vui lòng nhập số điện thoại của bạn.",
-                address: "Vui lòng nhập địa chỉ của bạn.",
-                email: "Vui lòng nhập  địa chỉ email hợp lệ "
+                address: "Vui lòng nhập địa chỉ của bạn..",
+                email: "Vui lòng nhập  địa chỉ email hợp lệ. ",
+                roleCode :"Vui lòng lựa chọn chức vụ.",
+                gender :"Vui lòng lựa chọn giới tính của bạn."
             },
         })
 
@@ -260,7 +269,7 @@
                     });
                 },
                 error: function (res) {
-                    swal("Error", "Could not be updated! :)", "error");
+                    swal("Error", "Could not be updated!", "error");
                     window.location.href = "/user-edit-"+res.id;
                 }
             });

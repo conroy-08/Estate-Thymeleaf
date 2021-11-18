@@ -21,7 +21,7 @@ public class FileAPI {
     private String location;
 
 
-    private  FileUtils fileUtils;
+    private final FileUtils fileUtils;
     @Autowired
     public FileAPI(FileUtils fileUtils) {
         this.fileUtils = fileUtils;
