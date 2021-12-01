@@ -21,7 +21,7 @@ public class CustomErrorController implements ErrorController{
         String errorPage ="error";
         String pageTitle = "Error";
         if (status != null) {
-            Integer statusCode = Integer.valueOf(status.toString());
+            int statusCode = Integer.parseInt(status.toString());
 
             if(statusCode == HttpStatus.NOT_FOUND.value()) {
                 pageTitle ="Page Not Found";

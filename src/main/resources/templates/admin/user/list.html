@@ -130,7 +130,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="item : ${userModel.listResult}" >
+                                        <tr th:each="item : ${listUser}" >
                                             <td> <input type="checkbox" th:id= "'checkbox_' + ${item.id} " th:value="*{item.id}" /></td>
                                             <td th:text="${item.userName}"> </td>
                                             <td th:text="${item.fullName}"> </td>

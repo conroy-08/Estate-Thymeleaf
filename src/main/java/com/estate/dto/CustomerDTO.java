@@ -3,12 +3,22 @@ package com.estate.dto;
 
 import com.estate.enums.Gender;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class CustomerDTO extends AbstractDTO<CustomerDTO> {
+
+    @NotBlank(message = "Vui lòng nhập họ tên . ")
     private String fullName;
+
+    @NotBlank(message = "Vui lòng nhập số điện thoại.")
     private String phone;
+
+    @NotBlank(message = "")
+    @Email(message = "")
     private String email;
+
     private String company;
     private String note;
     private String demand;

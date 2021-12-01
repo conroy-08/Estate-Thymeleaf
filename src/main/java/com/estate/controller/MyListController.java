@@ -3,11 +3,11 @@ package com.estate.controller;
 import com.estate.dto.BuildingDTO;
 import com.estate.service.IMyListService;
 
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import java.util.List;
 
@@ -16,15 +16,18 @@ import java.util.List;
 public class MyListController {
 
 
+    private final IMyListService myListService;
+
     @Autowired
-    private IMyListService myListService;
+    public MyListController(IMyListService myListService) {
+        this.myListService = myListService;
+    }
 
     @GetMapping("/building-mylist")
-    public ModelAndView myList() throws NotFoundException {
-        ModelAndView mav = new ModelAndView("admin/building/mylist");
+    public String myList(Model model) {
         List<BuildingDTO> buildingDTOS = myListService.getMyListBuilding();
-        mav.addObject("mylist",buildingDTOS);
-        return mav;
+        model.addAttribute("mylist", buildingDTOS);
+        return "admin/building/mylist";
     }
 
 

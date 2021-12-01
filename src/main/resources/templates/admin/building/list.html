@@ -210,7 +210,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                <tr th:each="item : ${modelSearch.listResult}" >
+                                                <tr th:each="item : ${buildingList}" >
                                                     <td> <input type="checkbox" th:id= "'checkbox_' + ${item.id} " th:value="*{item.id}" /></td>
                                                     <td th:text="${item.createdDate}"> </td>
                                                     <td th:text="${item.name}"> </td>
@@ -372,14 +372,18 @@
                 data: JSON.stringify(data),
                 type: 'POST',
                 contentType: 'application/json',
-                success: function(data) {
-                    window.location.href = "/building-list?page="+currentPage+"&limit=5"
-                    alert("success");
+                success: function () {
+                    swal("Saved!", "success").then((result) => {
+                        if(result.value){
+                            location.reload();
+                            window.location.href = "/building-list?page="+currentPage+"&limit=5"
+                        }
+                    });
                 },
-                error: function() {
-                    window.location.href = "/building-list?page="+currentPage+"&limit=5"
-                    alert("fail");
+                error: function () {
+                    swal("Error", "Could not be saved! ", "error");
                 }
+
             });
         }
 

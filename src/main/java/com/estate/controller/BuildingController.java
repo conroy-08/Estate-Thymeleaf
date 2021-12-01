@@ -9,8 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+
 
 
 @Controller(value = "buildingControllerOfAdmin")
@@ -27,47 +28,43 @@ public class BuildingController {
     }
 
     @GetMapping("/building-list")
-    public ModelAndView buildingList(@ModelAttribute("modelSearch") BuildingDTO buildingDTO) {
-        ModelAndView mav = new ModelAndView("admin/building/list");
+    public String buildingList(@ModelAttribute("modelSearch") BuildingDTO buildingDTO , Model model) {
         Pageable pageable = PageRequest.of(buildingDTO.getPage() - 1, buildingDTO.getLimit());
         buildingDTO.setTotalItems(buildingService.count(buildingDTO));
         buildingDTO.setTotalPage((int) Math.ceil((double) buildingDTO.getTotalItems() / buildingDTO.getLimit()));
-        buildingDTO.setListResult(buildingService.findByCondition(buildingDTO, pageable));
-        mav.addObject("staffs", userService.getStaffs());
-        addObject(mav);
-        return mav;
+        model.addAttribute("staffs", userService.getStaffs());
+        model.addAttribute("buildingList",buildingService.findByCondition(buildingDTO, pageable));
+        addObject(model);
+        return "admin/building/list";
     }
 
     @GetMapping("/building-edit")
-    public ModelAndView buildingEdit() {
-        ModelAndView mav = new ModelAndView("admin/building/edit");
+    public String buildingEdit(Model model) {
         BuildingDTO buildingDTO = new BuildingDTO();
-        mav.addObject("buildingEdit", buildingDTO);
-        addObject(mav);
-        return mav;
+        model.addAttribute("buildingEdit", buildingDTO);
+        addObject(model);
+        return "admin/building/edit";
     }
 
     @GetMapping("/building-edit-{id}")
-    public ModelAndView buildingEdit(@PathVariable(value = "id") Long id) {
-        ModelAndView mav = new ModelAndView("admin/building/edit");
+    public String buildingEdit(@PathVariable(value = "id") Long id, Model model) {
         BuildingDTO buildingDTO = buildingService.findById(id);
-        mav.addObject("buildingEdit", buildingDTO);
-        addObject(mav);
-        return mav;
+        model.addAttribute("buildingEdit", buildingDTO);
+        addObject(model);
+        return "admin/building/edit";
     }
 
     @GetMapping("/building-view-{id}")
-    public ModelAndView buildingView(@PathVariable(value = "id") Long id) {
-        ModelAndView mav = new ModelAndView("admin/building/view");
+    public String buildingView(@PathVariable(value = "id") Long id , Model model) {
         BuildingDTO buildingDTO = buildingService.findById(id);
-        mav.addObject("buildingView", buildingDTO);
-        addObject(mav);
-        return mav;
+        model.addAttribute("buildingView", buildingDTO);
+        addObject(model);
+        return "admin/building/view";
     }
 
-    private void addObject(ModelAndView mav) {
-        mav.addObject("buildingTypes", DataUtils.getBuildingTypes());
-        mav.addObject("districts", DataUtils.getDistricts());
+    private void addObject(Model model) {
+        model.addAttribute("buildingTypes", DataUtils.getBuildingTypes());
+        model.addAttribute("districts", DataUtils.getDistricts());
     }
 
 
